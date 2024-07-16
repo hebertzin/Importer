@@ -27,8 +27,8 @@ jobs:
           file: ./docker/Dockerfile
           push: true
           tags: |
-            hebertzin/api-golang:latest
+            hebertzin/enube-challenge:latest
 
       - name: Run Docker container
         run: |
-          docker run -d -p 8080:8080 hebertzin/api-golang:latest
+          docker run -d -p 8080:8080 hebertzin/enube-challenge:latest
