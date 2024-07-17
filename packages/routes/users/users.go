@@ -17,5 +17,6 @@ func UserRouter(router *gin.Engine, db *gorm.DB) {
 	usersGroup := router.Group("/api/v1")
 	{
 		usersGroup.POST("/users", userControllers.Create)
+		usersGroup.GET("/users/:email", userControllers.FindByEmail)
 	}
 }
