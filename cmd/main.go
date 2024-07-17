@@ -1,11 +1,9 @@
 package main
 
 import (
-	"enube-challenge/packages/database"
-	"fmt"
+	"enube-challenge/cmd/api"
 )
 
 func main() {
-	database.ConnectDatabase()
-	fmt.Println("Hello from go!!")
+	api.SetupServer()
 }
