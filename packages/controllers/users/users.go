@@ -2,25 +2,11 @@ package users
 
 import (
 	models "enube-challenge/packages/models/users"
-	r "enube-challenge/packages/repository/users"
 	s "enube-challenge/packages/services/users"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
-
-func UsersRoutes(router *gin.Engine, db *gorm.DB) {
-
-	usersRepository := r.NewUsersRepository(db)
-	usersService := s.NewUsersService(usersRepository)
-	userControllers := NewUserController(usersService)
-
-	usersGroup := router.Group("/users")
-	{
-		usersGroup.POST("/", userControllers.Create)
-	}
-}
 
 type UserController struct {
 	userService s.UsersService
