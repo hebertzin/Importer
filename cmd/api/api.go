@@ -20,5 +20,7 @@ func SetupServer() {
 
 	users.UserRouter(r, db)
 
-	r.Run(":8080")
+	if err := r.Run(":8080"); err != nil {
+		panic("Erro ao iniciar o servidor: " + err.Error())
+	}
 }
