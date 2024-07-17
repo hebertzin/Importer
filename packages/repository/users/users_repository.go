@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	users "enube-challenge/packages/interfaces/users"
 	models "enube-challenge/packages/models/users"
 
@@ -17,11 +18,11 @@ func NewUsersRepository(db *gorm.DB) users.UserRepository {
 	}
 }
 
-func (r *usersRepository) CreateUser(user *models.Users) error {
+func (r *usersRepository) CreateUser(ctx context.Context, user *models.Users) error {
 	return r.db.Create(user).Error
 }
 
-func (r *usersRepository) FindByEmail(email string) (*models.Users, error) {
+func (r *usersRepository) FindByEmail(ctx context.Context, email string) (*models.Users, error) {
 	var user models.Users
 	result := r.db.Where("email = ?", email).First(&user)
 	return &user, result.Error

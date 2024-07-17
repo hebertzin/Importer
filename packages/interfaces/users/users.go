@@ -1,8 +1,11 @@
 package users
 
-import models "enube-challenge/packages/models/users"
+import (
+	"context"
+	models "enube-challenge/packages/models/users"
+)
 
 type UserRepository interface {
-	CreateUser(user *models.Users) error
-	FindByEmail(email string) (*models.Users, error)
+	CreateUser(ctx context.Context, user *models.Users) error
+	FindByEmail(ctx context.Context, email string) (*models.Users, error)
 }
