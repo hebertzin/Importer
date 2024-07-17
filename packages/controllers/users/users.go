@@ -1,6 +1,9 @@
 package users
 
 import (
+	"context"
+	dto "enube-challenge/packages/controllers/dto/users"
+	handle "enube-challenge/packages/errors/handler/users"
 	models "enube-challenge/packages/models/users"
 	s "enube-challenge/packages/services/users"
 	"net/http"
@@ -19,35 +22,35 @@ func NewUserController(s s.UsersService) *UserController {
 }
 
 func (uc *UserController) Create(ctx *gin.Context) {
-	var user models.Users
-	if err := ctx.ShouldBindJSON(&user); err != nil {
+	var req dto.CreateUserRequestDTO
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"msg": "Some error has been ocurred",
+			"msg": "Invalid request body",
 		})
+		return
 	}
 
-	u, err := uc.userService.Create(ctx, &user)
+	user := models.Users{
+		Email:    req.Email,
+		Password: req.Password,
+		Username: req.Name,
+	}
 
+	createdUser, err := uc.userService.Create(context.Background(), &user)
 	if err != nil {
-		panic("Some error has been ocurred")
+		handle.UserAlreadyExistHandler(ctx, err)
+		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{
-		"user": u,
-	})
+	ctx.JSON(http.StatusCreated, createdUser)
 }
 
 func (uc *UserController) FindByEmail(ctx *gin.Context) {
-	var user models.Users
-	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"msg": "Some error has been ocurred",
-		})
-	}
+	var email string = ctx.Param("email")
 
-	u, _ := uc.userService.Create(ctx, &user)
+	u, _ := uc.userService.FindByEmail(ctx, email)
 
-	ctx.JSON(http.StatusCreated, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"user": u,
 	})
 }

@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	errors "enube-challenge/packages/errors"
 	r "enube-challenge/packages/interfaces/users"
 	models "enube-challenge/packages/models/users"
 )
@@ -24,11 +25,16 @@ func NewUsersService(repo r.UserRepository) *userService {
 func (s *userService) Create(ctx context.Context, user *models.Users) (*models.Users, error) {
 	err := s.repo.CreateUser(ctx, user)
 	if err != nil {
-		return nil, err
+		return nil, errors.ErrUserAlreadyExist
 	}
 	return user, nil
 }
+
 func (s *userService) FindByEmail(ctx context.Context, email string) (*models.Users, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
-	return user, err
+	if err != nil {
+		return nil, errors.ErrUserNotFound
+	}
+
+	return user, nil
 }
