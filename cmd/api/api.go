@@ -13,7 +13,7 @@ func SetupServer() {
 
 	err := migrations.Migrate(db)
 	if err != nil {
-		panic("Erro ao executar migração: " + err.Error())
+		panic("Error migrating database: " + err.Error())
 	}
 
 	r := gin.Default()
@@ -21,6 +21,6 @@ func SetupServer() {
 	users.UserRouter(r, db)
 
 	if err := r.Run(":8080"); err != nil {
-		panic("Erro ao iniciar o servidor: " + err.Error())
+		panic("Failed to start server: " + err.Error())
 	}
 }
