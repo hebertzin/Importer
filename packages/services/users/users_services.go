@@ -21,10 +21,13 @@ func NewUsersService(repo r.UserRepository) *userService {
 	}
 }
 
-func (s *userService) CreateUser(ctx context.Context, user *models.Users) error {
-	return s.repo.CreateUser(ctx, user)
+func (s *userService) Create(ctx context.Context, user *models.Users) (*models.Users, error) {
+	err := s.repo.CreateUser(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
-
 func (s *userService) FindByEmail(ctx context.Context, email string) (*models.Users, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	return user, err
