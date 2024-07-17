@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"enube-challenge/cmd/api"
+)
 
 func main() {
-	fmt.Println("Hello from go!!")
+	api.SetupServer()
 }
