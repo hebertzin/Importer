@@ -1,7 +1,6 @@
 package users
 
 import (
-	"context"
 	dto "enube-challenge/packages/controllers/dto/users"
 	handle "enube-challenge/packages/errors/handler/users"
 	models "enube-challenge/packages/models/users"
@@ -36,7 +35,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		Username: req.Name,
 	}
 
-	createdUser, err := uc.userService.Create(context.Background(), &user)
+	createdUser, err := uc.userService.Create(ctx.Request.Context(), &user)
 	if err != nil {
 		handle.UserAlreadyExistHandler(ctx, err)
 		return
