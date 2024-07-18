@@ -1,7 +1,6 @@
-package users
+package errors
 
 import (
-	errors "enube-challenge/packages/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +10,7 @@ func UserAlreadyExistHandler(ctx *gin.Context, err error) {
 	statusCode := http.StatusConflict
 	message := "User already exist"
 
-	if err == errors.ErrUserAlreadyExist {
+	if err == ErrUserAlreadyExist {
 		statusCode = http.StatusConflict
 		message = "User already exist"
 	}
@@ -26,7 +25,7 @@ func UserNotFoundHandler(ctx *gin.Context, err error) {
 	statusCode := http.StatusNotFound
 	message := "User not found"
 
-	if err == errors.ErrUserAlreadyExist {
+	if err == ErrUserAlreadyExist {
 		statusCode = http.StatusNotFound
 		message = "User not found"
 	}

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"enube-challenge/packages/dto"
-	handle "enube-challenge/packages/errors/handler/users"
+	"enube-challenge/packages/errors"
 	"enube-challenge/packages/models"
 	"enube-challenge/packages/services"
 	"github.com/gin-gonic/gin"
@@ -36,7 +36,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 
 	createdUser, err := uc.userService.Create(ctx.Request.Context(), &user)
 	if err != nil {
-		handle.UserAlreadyExistHandler(ctx, err)
+		errors.UserAlreadyExistHandler(ctx, ctx.Error(err))
 		return
 	}
 
@@ -49,7 +49,7 @@ func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	u, err := uc.userService.FindByEmail(ctx, email)
 
 	if err != nil {
-		handle.UserNotFoundHandler(ctx, err)
+		errors.UserNotFoundHandler(ctx, ctx.Error(err))
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
