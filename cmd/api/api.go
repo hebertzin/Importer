@@ -1,6 +1,7 @@
 package api
 
 import (
+	logger "enube-challenge/packages/config/logging"
 	"enube-challenge/packages/database"
 	"enube-challenge/packages/database/migrations"
 	"enube-challenge/packages/routes/users"
@@ -9,6 +10,7 @@ import (
 )
 
 func SetupServer() {
+	logger.InitLogger()
 	db := database.ConnectDatabase()
 
 	err := migrations.Migrate(db)
