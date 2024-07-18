@@ -1,12 +1,10 @@
-package users
+package routes
 
 import (
-	controllers "enube-challenge/packages/controllers/users"
-	middleware "enube-challenge/packages/middlewares"
-	repository "enube-challenge/packages/repository/users"
-	"enube-challenge/packages/services/jwt"
-	services "enube-challenge/packages/services/users"
-
+	"enube-challenge/packages/controllers"
+	"enube-challenge/packages/middlewares"
+	"enube-challenge/packages/repository"
+	"enube-challenge/packages/services"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -16,7 +14,7 @@ func UserRouter(router *gin.Engine, db *gorm.DB) {
 	usersService := services.NewUsersService(usersRepository)
 	userControllers := controllers.NewUserController(usersService)
 
-	jwtService := jwt.NewJWTService()
+	jwtService := services.NewJWTService()
 
 	usersGroup := router.Group("/api/v1")
 	{

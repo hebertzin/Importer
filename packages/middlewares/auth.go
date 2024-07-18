@@ -1,15 +1,14 @@
 package middleware
 
 import (
+	"enube-challenge/packages/services"
 	"net/http"
 	"strings"
-
-	"enube-challenge/packages/services/jwt"
 
 	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleware(jwtService *jwt.JWTService) gin.HandlerFunc {
+func AuthMiddleware(jwtService *services.JWTService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
