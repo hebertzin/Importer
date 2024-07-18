@@ -1,13 +1,12 @@
-package users
+package services
 
 import (
 	"context"
 	"enube-challenge/packages/errors"
-	users_repository "enube-challenge/packages/interfaces/users"
-	models "enube-challenge/packages/models/users"
-	"log"
-
+	"enube-challenge/packages/interfaces"
+	"enube-challenge/packages/models"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 )
 
 type UsersService interface {
@@ -16,10 +15,10 @@ type UsersService interface {
 }
 
 type userService struct {
-	repo users_repository.IUserRepository
+	repo interfaces.IUserRepository
 }
 
-func NewUsersService(repo users_repository.IUserRepository) *userService {
+func NewUsersService(repo interfaces.IUserRepository) *userService {
 	return &userService{
 		repo: repo,
 	}

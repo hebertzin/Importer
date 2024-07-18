@@ -1,8 +1,8 @@
-package users_repository
+package interfaces
 
 import (
 	"context"
-	models "enube-challenge/packages/models/users"
+	"enube-challenge/packages/models"
 )
 
 type IUserRepository interface {

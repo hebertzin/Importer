@@ -1,13 +1,12 @@
-package migrations
+package database
 
 import (
-	user "enube-challenge/packages/models/users"
-
+	"enube-challenge/packages/models"
 	"gorm.io/gorm"
 )
 
 func Migrate(db *gorm.DB) error {
-	err := db.AutoMigrate(&user.Users{})
+	err := db.AutoMigrate(&models.Users{})
 	if err != nil {
 		return err
 	}

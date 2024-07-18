@@ -1,10 +1,9 @@
-package users
+package repository
 
 import (
 	"context"
-	users_repository "enube-challenge/packages/interfaces/users"
-	models "enube-challenge/packages/models/users"
-
+	"enube-challenge/packages/interfaces"
+	"enube-challenge/packages/models"
 	"gorm.io/gorm"
 )
 
@@ -12,7 +11,7 @@ type usersRepository struct {
 	db *gorm.DB
 }
 
-func NewUsersRepository(db *gorm.DB) users_repository.IUserRepository {
+func NewUsersRepository(db *gorm.DB) interfaces.IUserRepository {
 	return &usersRepository{
 		db: db,
 	}

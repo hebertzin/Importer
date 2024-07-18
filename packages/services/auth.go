@@ -1,12 +1,9 @@
-package authentication
+package services
 
 import (
 	"context"
-
 	"enube-challenge/packages/errors"
-	users_repository "enube-challenge/packages/interfaces/users"
-	"enube-challenge/packages/services/jwt"
-
+	"enube-challenge/packages/interfaces"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -15,11 +12,11 @@ type AuthService interface {
 }
 
 type authService struct {
-	repo       users_repository.IUserRepository
-	jwtService *jwt.JWTService
+	repo       interfaces.IUserRepository
+	jwtService *JWTService
 }
 
-func NewAuthService(repo users_repository.IUserRepository, jwtService *jwt.JWTService) *authService {
+func NewAuthService(repo interfaces.IUserRepository, jwtService *JWTService) *authService {
 	return &authService{
 		repo:       repo,
 		jwtService: jwtService,

@@ -1,20 +1,19 @@
-package users
+package controllers
 
 import (
-	dto "enube-challenge/packages/controllers/dto/users"
+	"enube-challenge/packages/dto"
 	handle "enube-challenge/packages/errors/handler/users"
-	models "enube-challenge/packages/models/users"
-	s "enube-challenge/packages/services/users"
-	"net/http"
-
+	"enube-challenge/packages/models"
+	"enube-challenge/packages/services"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type UserController struct {
-	userService s.UsersService
+	userService services.UsersService
 }
 
-func NewUserController(s s.UsersService) *UserController {
+func NewUserController(s services.UsersService) *UserController {
 	return &UserController{
 		userService: s,
 	}
