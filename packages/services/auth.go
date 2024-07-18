@@ -4,6 +4,7 @@ import (
 	"context"
 	"enube-challenge/packages/domain"
 	"enube-challenge/packages/errors"
+
 	"golang.org/x/crypto/bcrypt"
 )
 

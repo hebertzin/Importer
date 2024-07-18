@@ -2,6 +2,7 @@ package database
 
 import (
 	"enube-challenge/packages/models"
+
 	"gorm.io/gorm"
 )
 
