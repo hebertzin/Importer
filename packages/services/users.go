@@ -5,8 +5,9 @@ import (
 	"enube-challenge/packages/domain"
 	"enube-challenge/packages/errors"
 	"enube-challenge/packages/models"
-	"golang.org/x/crypto/bcrypt"
 	"log"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UsersService interface {

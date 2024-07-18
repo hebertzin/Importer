@@ -3,8 +3,9 @@ package controllers
 import (
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/services"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {

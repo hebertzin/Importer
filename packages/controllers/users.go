@@ -5,8 +5,9 @@ import (
 	"enube-challenge/packages/errors"
 	"enube-challenge/packages/models"
 	"enube-challenge/packages/services"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
