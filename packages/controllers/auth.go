@@ -16,6 +16,14 @@ func NewAuthController(authService services.AuthService) *AuthController {
 	return &AuthController{authService: authService}
 }
 
+// SignInHandler @Summary Sign-in a user
+// @Description this function log in a user
+// @Tags auth
+// @Accept  json
+// @Produce  json
+// @Param product body dto.LoginRequestDTO
+// @Success 200
+// @Router /api/v1/authentication/sign-in [post]
 func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 	var req dto.LoginRequestDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
