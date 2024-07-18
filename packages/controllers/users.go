@@ -1,20 +1,20 @@
-package users
+package controllers
 
 import (
-	dto "enube-challenge/packages/controllers/dto/users"
-	handle "enube-challenge/packages/errors/handler/users"
-	models "enube-challenge/packages/models/users"
-	s "enube-challenge/packages/services/users"
+	"enube-challenge/packages/dto"
+	"enube-challenge/packages/errors"
+	"enube-challenge/packages/models"
+	"enube-challenge/packages/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	userService s.UsersService
+	userService services.UsersService
 }
 
-func NewUserController(s s.UsersService) *UserController {
+func NewUserController(s services.UsersService) *UserController {
 	return &UserController{
 		userService: s,
 	}
@@ -37,7 +37,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 
 	createdUser, err := uc.userService.Create(ctx.Request.Context(), &user)
 	if err != nil {
-		handle.UserAlreadyExistHandler(ctx, err)
+		errors.UserAlreadyExistHandler(ctx, ctx.Error(err))
 		return
 	}
 
@@ -50,7 +50,7 @@ func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	u, err := uc.userService.FindByEmail(ctx, email)
 
 	if err != nil {
-		handle.UserNotFoundHandler(ctx, err)
+		errors.UserNotFoundHandler(ctx, ctx.Error(err))
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
