@@ -5,6 +5,9 @@ import (
 	errors "enube-challenge/packages/errors"
 	r "enube-challenge/packages/interfaces/users"
 	models "enube-challenge/packages/models/users"
+	"log"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UsersService interface {
@@ -23,7 +26,15 @@ func NewUsersService(repo r.UserRepository) *userService {
 }
 
 func (s *userService) Create(ctx context.Context, user *models.Users) (*models.Users, error) {
-	err := s.repo.CreateUser(ctx, user)
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println("Some error has been ocurred", err)
+		return nil, err
+	}
+	user.Password = string(hashedPassword)
+
+	err = s.repo.CreateUser(ctx, user)
 	if err != nil {
 		return nil, errors.ErrUserAlreadyExist
 	}
