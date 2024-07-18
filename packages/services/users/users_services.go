@@ -2,8 +2,8 @@ package users
 
 import (
 	"context"
-	errors "enube-challenge/packages/errors"
-	r "enube-challenge/packages/interfaces/users"
+	"enube-challenge/packages/errors"
+	users_repository "enube-challenge/packages/interfaces/users"
 	models "enube-challenge/packages/models/users"
 	"log"
 
@@ -16,10 +16,10 @@ type UsersService interface {
 }
 
 type userService struct {
-	repo r.UserRepository
+	repo users_repository.IUserRepository
 }
 
-func NewUsersService(repo r.UserRepository) *userService {
+func NewUsersService(repo users_repository.IUserRepository) *userService {
 	return &userService{
 		repo: repo,
 	}
