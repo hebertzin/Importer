@@ -1,0 +1,141 @@
+basePath: /api/v1
+definitions:
+  dto.CreateUserRequestDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.LoginRequestDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.Users:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: hebertsantosdeveloper@gmail.com
+    name: Hebert santos
+    url: https://www.hebertzin.com/
+  description: Enube challenge
+  title: Enube challenge
+  version: "1.0"
+paths:
+  /api/v1/authentication/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: This function logs in a user and generates a token.
+      parameters:
+      - description: Login Request
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Sign-in a user
+      tags:
+      - auth
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user in the system. The user data is provided in
+        the request body.
+      parameters:
+      - description: Create User Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Users'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new user
+      tags:
+      - users
+  /api/v1/users/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a user from the database based on the provided email
+        address.
+      parameters:
+      - description: User Email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Find a user in the database by email
+      tags:
+      - users
+swagger: "2.0"
