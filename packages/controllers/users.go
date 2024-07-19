@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"enube-challenge/packages/domain"
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/errors"
 	"enube-challenge/packages/models"
@@ -52,7 +53,12 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, createdUser)
+	response := domain.HttpResponse{
+		Code:    http.StatusCreated,
+		Body:    createdUser,
+		Message: "User created successfully",
+	}
+	ctx.JSON(http.StatusOK, response)
 }
 
 // FindByEmail godoc
@@ -75,7 +81,11 @@ func (uc *UserController) FindByEmail(ctx *gin.Context) {
 		errors.UserNotFoundHandler(ctx, ctx.Error(err))
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"user": u,
-	})
+
+	response := domain.HttpResponse{
+		Code:    http.StatusOK,
+		Message: "User successfully find",
+		Body:    u,
+	}
+	ctx.JSON(http.StatusOK, response)
 }
