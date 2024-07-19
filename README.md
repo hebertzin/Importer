@@ -15,8 +15,8 @@ A file importer created with Golang following best practices in software develop
 ## **Endpoints**
 
 - **POST** `/api/v1/authentication/sign-in`: Log in a user and generate a token access
-- **POST** `/api/v1/users/users/` : Create a new user
-- **GET** `/api/v1/users/users/:email` : Get a user By email 
+- **POST** `/api/v1/users/` : Create a new user
+- **GET** `/api/v1/users/:email` : Get a user By email 
 
 ## Licence
 
