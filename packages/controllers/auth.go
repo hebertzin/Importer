@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"enube-challenge/packages/domain"
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/services"
 	"net/http"
@@ -30,15 +31,31 @@ func NewAuthController(authService services.AuthService) *AuthController {
 func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 	var req dto.LoginRequestDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response := domain.HttpResponse{
+			Message: "Invalid request body",
+			Code:    http.StatusBadRequest,
+			Body:    "",
+		}
+		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	token, err := ctrl.authService.Auth(c.Request.Context(), req.Email, req.Password)
+	authResponse, err := ctrl.authService.Auth(c.Request.Context(), req.Email, req.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		response := domain.HttpResponse{
+			Message: authResponse.Message,
+			Code:    authResponse.Code,
+			Body:    authResponse.Body,
+		}
+		c.JSON(authResponse.Code, response)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	response := domain.HttpResponse{
+		Message: "User logged in successfully",
+		Code:    http.StatusOK,
+		Body:    authResponse.Body,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
