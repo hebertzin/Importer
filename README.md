@@ -12,6 +12,12 @@ A file importer created with Golang following best practices in software develop
 * [Postgres](https://www.postgresql.org/) - Database
 * [Jwt](https://www.postgresql.org/) - Token management for application access
 
+## **Endpoints**
+
+- **POST** `/api/v1/authentication/sign-in`: Log in a user and generate a token access
+- **POST** `/api/v1/users/users/` : Create a new user
+- **GET** `/api/v1/users/users/:email` : Get a user By email 
+
 ## Licence
 
 This project is under license (MIT LICENCE) - see the file [LICENSE](https://github.com/hebertsanto/enube-challenge/blob/main/LICENCE) to more details
