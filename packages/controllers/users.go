@@ -20,14 +20,17 @@ func NewUserController(s services.UsersService) *UserController {
 	}
 }
 
-// Create @Summary Add a new user
-// @Description This handler func create a new user in database
-// @Tags users
-// @Accept  json
-// @Produce  json
-// @Param product body dto.CreateUserRequestDTO
-// @Success 201
-// @Router /api/v1/users [post]
+// Create godoc
+// @Summary     Create a new user
+// @Description  Creates a new user in the system. The user data is provided in the request body.
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user body dto.CreateUserRequestDTO true "Create User Request"
+// @Success      201  {object} models.Users
+// @Failure      400  {object} map[string]string
+// @Failure      409  {object} map[string]string
+// @Router       /api/v1/users [post]
 func (uc *UserController) Create(ctx *gin.Context) {
 	var req dto.CreateUserRequestDTO
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -52,14 +55,17 @@ func (uc *UserController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, createdUser)
 }
 
-// FindByEmail @Summary Get a new user
-// @Description This handler func get a user by email
-// @Tags users
-// @Accept  json
-// @Produce  json
-// @Param product params email
-// @Success 200
-// @Router /api/v1/users/:email [get]
+// FindByEmail godoc
+// @Summary     Find a user in the database by email
+// @Description  Retrieves a user from the database based on the provided email address.
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        email path string true "User Email"
+// @Success      200
+// @Failure      400  {object} map[string]string
+// @Failure      404  {object} map[string]string
+// @Router       /api/v1/users/{email} [get]
 func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	var email string = ctx.Param("email")
 
