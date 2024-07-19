@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o enube-challenge ./cmd/main.go
+RUN go build -o enube-challenge ./cmd/api/main.go
 
 EXPOSE 8080
 
