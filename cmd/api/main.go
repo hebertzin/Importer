@@ -34,6 +34,7 @@ func main() {
 
 	routes.UserRouter(r, db)
 	routes.AuthRouter(r, db)
+	routes.Importer(r, db)
 
 	if err := r.Run(":8080"); err != nil {
 		panic("Failed to start server: " + err.Error())
