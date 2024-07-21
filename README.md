@@ -14,10 +14,11 @@ A file importer created with Golang following best practices in software develop
 * [Swaggo](https://github.com/swaggo) - Api docs
 * [Railway](https://railway.app/) - Deploy database
 * [Zap](https://github.com/uber-go/zap) - Logs of the application
+* [Postman](https://www.postman.com/) - Logs of the application
 
 ## **Endpoints**
 
-### Auth
+### Authentication
 - **POST** `/api/v1/authentication/sign-in`: Log in a user and generate a token access
 
 ### Users
@@ -43,10 +44,8 @@ A file importer created with Golang following best practices in software develop
 1. **Clone the repository**
 
  ```bash
- git clone https://github.com/seu-usuario/seu-repositorio.git
- cd enube-challenge
-## Licence
-This project is under license (MIT LICENCE) - see the file [LICENSE](https://github.com/hebertsanto/enube-challenge/blob/main/LICENCE) to more details
+ git clone https://github.com/hebertsanto/Enube-challenge
+ cd Enube-challenge
 ```
 
 2 **Set the environment variables**
@@ -111,6 +110,10 @@ The entire deployment process is automated with a GitHub Action, streamlining in
 
 3 [Data Transfer Objects](https://docs.abp.io/en/abp/latest/Data-Transfer-Objects)
 
+## Postman collection
 
+- [Click here to postman collection](https://www.postman.com/descent-module-architect-9422719/workspace/enube/collection/36500427-d1489007-cff7-4dd2-8d6f-f869f3c7462d)
 
+## Conclusion
 
+I really enjoyed doing this challenge, I learned a lot of important concepts about the language and new ways of solving problems, it was a great experience.
