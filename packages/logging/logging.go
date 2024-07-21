@@ -7,7 +7,7 @@ import (
 
 var Log *zap.Logger
 
-func InitLogger() *zap.Logger {
+func InitLogger() {
 	config := zap.Config{
 		Encoding:         "json",
 		Level:            zap.NewAtomicLevelAt(zap.InfoLevel),
@@ -33,6 +33,4 @@ func InitLogger() *zap.Logger {
 	if err != nil {
 		panic(err)
 	}
-
-	return Log
 }
