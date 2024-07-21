@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"bytes"
 	"enube-challenge/packages/services"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
+	"mime/multipart"
 	"net/http"
 )
 
@@ -21,16 +24,24 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read file"})
 		return
 	}
-	defer file.Close()
 
-	fileBytes, err := io.ReadAll(file)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read file contents"})
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+			log.Printf("Failed to close file: %v", err)
+		}
+	}(file)
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, file); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read file content"})
 		return
 	}
 
-	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), fileBytes); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to import suppliers"})
+	log.Printf("File read successfully, size: %d bytes", buf.Len())
+
+	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to import suppliers: " + err.Error()})
 		return
 	}
 
