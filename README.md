@@ -43,10 +43,8 @@ A file importer created with Golang following best practices in software develop
 1. **Clone the repository**
 
  ```bash
- git clone https://github.com/seu-usuario/seu-repositorio.git
- cd enube-challenge
-## Licence
-This project is under license (MIT LICENCE) - see the file [LICENSE](https://github.com/hebertsanto/enube-challenge/blob/main/LICENCE) to more details
+ git clone https://github.com/hebertsanto/Enube-challenge
+ cd Enube-challenge
 ```
 
 2 **Set the environment variables**
