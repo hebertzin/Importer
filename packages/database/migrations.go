@@ -7,7 +7,7 @@ import (
 )
 
 func Migrate(db *gorm.DB) error {
-	err := db.AutoMigrate(&models.Users{})
+	err := db.AutoMigrate(&models.Users{}, &models.Supplier{})
 	if err != nil {
 		return err
 	}

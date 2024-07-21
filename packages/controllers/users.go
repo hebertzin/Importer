@@ -29,8 +29,8 @@ func NewUserController(s services.UsersService) *UserController {
 // @Produce      json
 // @Param        user body dto.CreateUserRequestDTO true "Create User Request"
 // @Success      201  {object} models.Users
-// @Failure      400  {object} map[string]string
-// @Failure      409  {object} map[string]string
+// @Failure      400  Invalid request body
+// @Failure      409  User already exist
 // @Router       /api/v1/users [post]
 func (uc *UserController) Create(ctx *gin.Context) {
 	var req dto.CreateUserRequestDTO
@@ -43,7 +43,6 @@ func (uc *UserController) Create(ctx *gin.Context) {
 
 	user := models.Users{
 		Email:    req.Email,
-		Password: req.Password,
 		Username: req.Name,
 	}
 

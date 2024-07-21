@@ -1,36 +1,20 @@
 package database
 
 import (
+	"enube-challenge/packages/config"
 	"fmt"
-	"log"
-	"os"
-
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 )
 
 var db *gorm.DB
 
-func ConnectDatabase() *gorm.DB {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
+func ConnectDatabase(cfg *config.Config) *gorm.DB {
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s port=%s host=%s sslmode=disable",
+		cfg.User, cfg.Password, cfg.Database, cfg.Port, cfg.Host)
 
-	user := os.Getenv("USER_DATABASE")
-	password := os.Getenv("USER_PASSWORD")
-	database := os.Getenv("DATABASE")
-	port := os.Getenv("PORT")
-	host := os.Getenv("HOST")
-
-	if user == "" || password == "" || database == "" || port == "" || host == "" {
-		log.Fatal("One or more required environment variables are not set")
-	}
-
-	dsn := fmt.Sprintf("user=%s password=%s dbname=%s port=%s host=%s sslmode=disable TimeZone=Asia/Shanghai",
-		user, password, database, port, host)
-
+	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to the database: %v", err)
