@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -28,6 +29,8 @@ func LoadConfig() *Config {
 		Port:     os.Getenv("PORT"),
 		Host:     os.Getenv("HOST"),
 	}
+
+	fmt.Printf("Loaded Config: %+v\n", config)
 
 	if config.User == "" || config.Password == "" || config.Database == "" || config.Port == "" || config.Host == "" {
 		log.Fatal("One or more required environment variables are not set")
