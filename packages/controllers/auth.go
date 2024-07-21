@@ -34,7 +34,6 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 		response := domain.HttpResponse{
 			Message: "Invalid request body",
 			Code:    http.StatusBadRequest,
-			Body:    "Request body is malformed",
 		}
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -45,7 +44,6 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 		response := domain.HttpResponse{
 			Message: authResponse.Message,
 			Code:    authResponse.Code,
-			Body:    authResponse.Body,
 		}
 		c.JSON(authResponse.Code, response)
 		return
