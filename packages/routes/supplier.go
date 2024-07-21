@@ -19,7 +19,7 @@ func Suppliers(router *gin.Engine, db *gorm.DB) {
 
 	supplierGroup := router.Group("/api/v1")
 	{
-		supplierGroup.POST("/suppliers/import", middleware.AuthMiddleware(jwtService), supplierController.ImportSuppliersHandler)
+		supplierGroup.POST("/suppliers/import", middleware.AuthMiddleware(jwtService), middleware.VerifyXLSXMiddleware, supplierController.ImportSuppliersHandler)
 		supplierGroup.GET("/suppliers", middleware.AuthMiddleware(jwtService), supplierController.FindSuppliersHandler)
 		supplierGroup.GET("/suppliers/:id", middleware.AuthMiddleware(jwtService), supplierController.FindSupplierById)
 	}
