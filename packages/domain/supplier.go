@@ -6,5 +6,7 @@ import (
 )
 
 type Supplier interface {
-	Upload(ctx context.Context, suppliers *models.Supplier) error
+	SaveSuppliers(ctx context.Context, suppliersChan <-chan models.Supplier, batchSize int) error
+	FindAllSuppliers(ctx context.Context, page, pageSize int) ([]models.Supplier, error)
+	FindSupplierById(ctx context.Context, id int) (*models.Supplier, error)
 }
