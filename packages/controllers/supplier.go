@@ -1,10 +1,16 @@
 package controllers
 
 import (
+	"bytes"
+	"enube-challenge/packages/domain"
 	"enube-challenge/packages/services"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
+	"mime/multipart"
 	"net/http"
+	"strconv"
 )
 
 type SupplierController struct {
@@ -15,24 +21,110 @@ func NewSupplierController(service services.SupplierService) *SupplierController
 	return &SupplierController{service}
 }
 
+// ImportSuppliersHandler godoc
+// @Summary Import suppliers from an Excel file
+// @Description Import suppliers from an Excel file. The file should be an Excel file (.xlsx) containing supplier data.
+// @Tags suppliers
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Suppliers Excel file"
+// @Success 200 {object} domain.HttpResponse "Suppliers imported successfully"
+// @Failure 400 {object} domain.HttpResponse "Failed to read file"
+// @Failure 500 {object} domain.HttpResponse "Failed to import suppliers"
+// @Router /suppliers/import [post]
 func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	file, _, err := c.Request.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read file"})
+		c.JSON(http.StatusBadRequest, domain.HttpResponse{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		})
 		return
 	}
-	defer file.Close()
 
-	fileBytes, err := io.ReadAll(file)
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+			log.Printf("Failed to close file: %v", err)
+		}
+	}(file)
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, file); err != nil {
+		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	log.Printf("File read successfully, size: %d bytes", buf.Len())
+
+	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
+		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	response := domain.HttpResponse{
+		Message: "Suppliers imported successfully",
+		Code:    http.StatusCreated,
+	}
+	c.JSON(http.StatusOK, response)
+}
+
+func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
+
+	pageStr := c.DefaultQuery("page", "1")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil || page < 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid page number"})
+		return
+	}
+
+	pageSizeStr := c.DefaultQuery("pageSize", "10")
+	pageSize, err := strconv.Atoi(pageSizeStr)
+	if err != nil || pageSize < 1 {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid page size"})
+		return
+	}
+
+	suppliers, err := ctrl.service.GetSuppliers(c.Request.Context(), page, pageSize)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read file contents"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Failed to retrieve suppliers: %v", err)})
 		return
 	}
 
-	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), fileBytes); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to import suppliers"})
+	c.JSON(http.StatusOK, gin.H{
+		"page":      page,
+		"total":     len(suppliers),
+		"code":      http.StatusOK,
+		"suppliers": suppliers,
+	})
+}
+
+func (ctrl *SupplierController) FindSupplierById(ctx *gin.Context) {
+
+	idStr := ctx.Param("id")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid ID format"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Suppliers imported successfully"})
+	supplier, err := ctrl.service.FindSupplierById(ctx.Request.Context(), id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "Supplier not found"})
+		return
+	}
+
+	response := domain.HttpResponse{
+		Code:    http.StatusOK,
+		Message: "Supplier successfully found",
+		Body:    supplier,
+	}
+	ctx.JSON(http.StatusOK, response)
 }

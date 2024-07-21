@@ -3,17 +3,15 @@ package database
 import (
 	"enube-challenge/packages/config"
 	"fmt"
-	"log"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 )
 
 var db *gorm.DB
 
-func ConnectDatabase() *gorm.DB {
-	cfg := config.LoadConfig()
-	dsn := fmt.Sprintf("user=%s password=%s dbname=%s port=%s host=%s sslmode=disable TimeZone=Asia/Shanghai",
+func ConnectDatabase(cfg *config.Config) *gorm.DB {
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s port=%s host=%s sslmode=disable",
 		cfg.User, cfg.Password, cfg.Database, cfg.Port, cfg.Host)
 
 	var err error

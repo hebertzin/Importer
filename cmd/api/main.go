@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "enube-challenge/docs"
+	"enube-challenge/packages/config"
 	"enube-challenge/packages/database"
 	"enube-challenge/packages/logging"
 	"enube-challenge/packages/routes"
@@ -21,7 +22,8 @@ import (
 // @BasePath /api/v1
 func main() {
 	logging.InitLogger()
-	db := database.ConnectDatabase()
+	c := config.LoadConfig()
+	db := database.ConnectDatabase(c)
 
 	err := database.Migrate(db)
 	if err != nil {
@@ -34,7 +36,7 @@ func main() {
 
 	routes.UserRouter(r, db)
 	routes.AuthRouter(r, db)
-	routes.Importer(r, db)
+	routes.Suppliers(r, db)
 
 	if err := r.Run(":8080"); err != nil {
 		panic("Failed to start server: " + err.Error())

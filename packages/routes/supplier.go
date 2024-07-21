@@ -8,15 +8,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func Importer(router *gin.Engine, db *gorm.DB) {
-
+func Suppliers(router *gin.Engine, db *gorm.DB) {
 	supplierRepository := repository.NewSupplierRepository(db)
-
 	supplierService := services.NewSupplierService(supplierRepository)
 	supplierController := controllers.NewSupplierController(supplierService)
 
-	authGroup := router.Group("/api/v1")
+	supplierGroup := router.Group("/api/v1")
 	{
-		authGroup.POST("/import/suppliers", supplierController.ImportSuppliersHandler)
+		supplierGroup.POST("/suppliers/import", supplierController.ImportSuppliersHandler)
+		supplierGroup.GET("/suppliers", supplierController.FindSuppliersHandler)
+		supplierGroup.GET("/suppliers/:id", supplierController.FindSupplierById)
 	}
 }
