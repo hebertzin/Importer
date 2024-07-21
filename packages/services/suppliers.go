@@ -5,7 +5,7 @@ import (
 	"context"
 	"enube-challenge/packages/domain"
 	"fmt"
-	"log"
+	"go.uber.org/zap"
 	"sync"
 
 	"enube-challenge/packages/models"
@@ -39,7 +39,8 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 
 	rows, err := f.GetRows(sheetName)
 	if err != nil {
-		return fmt.Errorf("failed to get rows from sheet: %w", err)
+		logger.Error("failed to fetch rows", zap.Error(err))
+		return err
 	}
 
 	const numWorkers = 5
@@ -138,6 +139,7 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 	}()
 
 	if err := s.repo.SaveSuppliers(ctx, supplierChan, batchSize); err != nil {
+		logger.Error("failed to save suppliers", zap.Error(err))
 		return err
 	}
 
@@ -147,7 +149,7 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 	default:
 	}
 
-	log.Printf("Successfully processed rows")
+	logger.Info("successfully imported suppliers")
 	return nil
 }
 

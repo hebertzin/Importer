@@ -75,6 +75,18 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// FindSuppliersHandler godoc
+// @Summary Retrieve a list of suppliers with pagination
+// @Description Get a paginated list of suppliers from the database
+// @Tags suppliers
+// @Accept  json
+// @Produce  json
+// @Param page query int false "Page number" default(1)
+// @Param pageSize query int false "Number of suppliers per page" default(10)
+// @Success 200 {string} Supplier successfully found
+// @Failure 400  {string} Invalid page number
+// @Failure 500 {string} Failed to retrieve suppliers
+// @Router /api/v1/suppliers/import [get]
 func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
 
 	pageStr := c.DefaultQuery("page", "1")
@@ -105,6 +117,16 @@ func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
 	})
 }
 
+// FindSupplierById godoc
+// @Summary Retrieve a supplier
+// @Description Get a supplier
+// @Tags suppliers
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Supplier ID"
+// @Success 200 {string} Supplier successfully found
+// @Failure 500 {string} Failed to retrieve suppliers
+// @Router /api/v1/suppliers/:id [get]
 func (ctrl *SupplierController) FindSupplierById(ctx *gin.Context) {
 
 	idStr := ctx.Param("id")
