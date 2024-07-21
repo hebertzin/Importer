@@ -68,6 +68,95 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/suppliers/:id": {
+            "get": {
+                "description": "Get a supplier",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Retrieve a supplier",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Supplier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/suppliers/import": {
+            "get": {
+                "description": "Get a paginated list of suppliers from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Retrieve a list of suppliers with pagination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Number of suppliers per page",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "post": {
                 "description": "Creates a new user in the system. The user data is provided in the request body.",
@@ -102,19 +191,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "Invalid"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "User"
                         }
                     }
                 }
@@ -166,9 +249,65 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/suppliers/import": {
+            "post": {
+                "description": "Import suppliers from an Excel file. The file should be an Excel file (.xlsx) containing supplier data.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Import suppliers from an Excel file",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Suppliers Excel file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Suppliers imported successfully\" example(domain.HttpResponse{Message: \"Suppliers imported successfully\", Code: 200, Body: nil})",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HttpResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to read file",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HttpResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to import suppliers",
+                        "schema": {
+                            "$ref": "#/definitions/domain.HttpResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "domain.HttpResponse": {
+            "type": "object",
+            "properties": {
+                "body": {},
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.CreateUserRequestDTO": {
             "type": "object",
             "properties": {
@@ -201,6 +340,9 @@ const docTemplate = `{
         "models.Users": {
             "type": "object",
             "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -208,6 +350,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 },
                 "username": {

@@ -12,7 +12,7 @@ A file importer created with Golang following best practices in software develop
 * [Postgres](https://www.postgresql.org/) - Database
 * [Jwt](https://www.postgresql.org/) - Token management for application access
 * [Swaggo](https://github.com/swaggo) - Api docs
-* [Raiwail](https://github.com/swaggo) - Deploy database
+* [Railway](https://railway.app/) - Deploy database
 * [Zap](https://github.com/uber-go/zap) - Logs of the application
 
 ## **Endpoints**
@@ -102,3 +102,15 @@ CMD ["./enube-challenge"]
 ```
 
 The entire deployment process is automated with a GitHub Action, streamlining integration and deployment to various services.
+
+## Design patterns
+
+1 [Dependency injection](https://www.freecodecamp.org/news/a-quick-intro-to-dependency-injection-what-it-is-and-when-to-use-it-7578c84fa88f/#:~:text=In%20software%20engineering%2C%20dependency%20injection,be%20used%20(a%20service).)
+
+2 [Dependency inversion](https://medium.com/@tbaragao/solid-d-i-p-dependency-inversion-principle-e87527f8d0be)
+
+3 [Data Transfer Objects](https://docs.abp.io/en/abp/latest/Data-Transfer-Objects)
+
+
+
+

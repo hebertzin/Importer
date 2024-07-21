@@ -4,6 +4,7 @@ import (
 	"context"
 	"enube-challenge/packages/domain"
 	"enube-challenge/packages/errors"
+	"enube-challenge/packages/logging"
 	"enube-challenge/packages/models"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
@@ -28,7 +29,7 @@ func (s *userService) Create(ctx context.Context, user *models.Users) (*models.U
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		logger.Error("Some error has been ocurred", zap.Error(err))
+		logging.Log.Error("Some error has been ocurred", zap.Error(err))
 		return nil, err
 	}
 	user.Password = string(hashedPassword)

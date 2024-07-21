@@ -1,5 +1,13 @@
 basePath: /api/v1
 definitions:
+  domain.HttpResponse:
+    properties:
+      body: {}
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
   dto.CreateUserRequestDTO:
     properties:
       email:
@@ -21,11 +29,15 @@ definitions:
     type: object
   models.Users:
     properties:
+      createdAt:
+        type: string
       email:
         type: string
       id:
         type: integer
       password:
+        type: string
+      updatedAt:
         type: string
       username:
         type: string
@@ -71,6 +83,65 @@ paths:
       summary: Sign-in a user
       tags:
       - auth
+  /api/v1/suppliers/:id:
+    get:
+      consumes:
+      - application/json
+      description: Get a supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieve a supplier
+      tags:
+      - suppliers
+  /api/v1/suppliers/import:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of suppliers from the database
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of suppliers per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieve a list of suppliers with pagination
+      tags:
+      - suppliers
   /api/v1/users:
     post:
       consumes:
@@ -94,15 +165,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: Invalid
         "409":
           description: Conflict
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: User
       summary: Create a new user
       tags:
       - users
@@ -138,4 +205,35 @@ paths:
       summary: Find a user in the database by email
       tags:
       - users
+  /suppliers/import:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Import suppliers from an Excel file. The file should be an Excel
+        file (.xlsx) containing supplier data.
+      parameters:
+      - description: Suppliers Excel file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'Suppliers imported successfully" example(domain.HttpResponse{Message:
+            "Suppliers imported successfully", Code: 200, Body: nil})'
+          schema:
+            $ref: '#/definitions/domain.HttpResponse'
+        "400":
+          description: Failed to read file
+          schema:
+            $ref: '#/definitions/domain.HttpResponse'
+        "500":
+          description: Failed to import suppliers
+          schema:
+            $ref: '#/definitions/domain.HttpResponse'
+      summary: Import suppliers from an Excel file
+      tags:
+      - suppliers
 swagger: "2.0"
