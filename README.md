@@ -118,3 +118,11 @@ The entire deployment process is automated with a GitHub Action, streamlining in
 ## Conclusion
 
 I really enjoyed doing this challenge, I learned a lot of important concepts about the language and new ways of solving problems, it was a great experience.
+
+- Processing xlsx
+  
+It was a really cool challenge to process this file, I learned several language features, the data was processed in 3 minutes as shown in the image
+  
+![Captura de tela de 2024-07-22 00-46-13](https://github.com/user-attachments/assets/dcaa422c-efe7-4236-b008-74c773b6103b)
+
+In short, I loved participating in this process, I believe it was very good for my growth and learning.
