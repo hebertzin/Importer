@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"enube-challenge/packages/domain"
-	"enube-challenge/packages/models"
+	"enube-challenge/packages/logging"
 	"log"
 
 	"gorm.io/gorm"
@@ -13,12 +13,12 @@ type repository struct {
 	db *gorm.DB
 }
 
-func NewSupplierRepository(db *gorm.DB) domain.Supplier {
+func NewSupplierRepository(db *gorm.DB) domain.SupplierRepository {
 	return &repository{db: db}
 }
 
-func (r *repository) SaveSuppliers(ctx context.Context, suppliersChan <-chan models.Supplier, batchSize int) error {
-	var suppliers []models.Supplier
+func (r *repository) SaveSuppliers(ctx context.Context, suppliersChan <-chan domain.Supplier, batchSize int) error {
+	var suppliers []domain.Supplier
 	for supplier := range suppliersChan {
 		suppliers = append(suppliers, supplier)
 		if len(suppliers) >= batchSize {
@@ -36,7 +36,7 @@ func (r *repository) SaveSuppliers(ctx context.Context, suppliersChan <-chan mod
 	return nil
 }
 
-func (r *repository) uploadSuppliers(ctx context.Context, suppliers []models.Supplier) error {
+func (r *repository) uploadSuppliers(ctx context.Context, suppliers []domain.Supplier) error {
 	if len(suppliers) == 0 {
 		log.Println("No suppliers to upload")
 		return nil
@@ -49,11 +49,11 @@ func (r *repository) uploadSuppliers(ctx context.Context, suppliers []models.Sup
 		return err
 	}
 
-	log.Println("Suppliers uploaded successfully")
+	logging.Log.Info("Suppliers uploaded successfully")
 	return nil
 }
 
-func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) ([]models.Supplier, error) {
+func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) ([]domain.Supplier, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -63,7 +63,7 @@ func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) (
 
 	offset := (page - 1) * pageSize
 
-	var suppliers []models.Supplier
+	var suppliers []domain.Supplier
 	result := r.db.WithContext(ctx).
 		Offset(offset).
 		Limit(pageSize).
@@ -76,8 +76,8 @@ func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) (
 	return suppliers, nil
 }
 
-func (r *repository) FindSupplierById(ctx context.Context, id int) (*models.Supplier, error) {
-	var supplier models.Supplier
+func (r *repository) FindSupplierById(ctx context.Context, id int) (*domain.Supplier, error) {
+	var supplier domain.Supplier
 	result := r.db.WithContext(ctx).Where("id = ?", id).First(&supplier)
 	if result.Error != nil {
 		return nil, result.Error

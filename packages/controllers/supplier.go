@@ -37,14 +37,12 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domain.HttpResponse{
 			Code:    http.StatusBadRequest,
-			Message: err.Error(),
+			Message: "Failed to retrieve file from request: " + err.Error(),
 		})
 		return
 	}
-
 	defer func(file multipart.File) {
-		err := file.Close()
-		if err != nil {
+		if err := file.Close(); err != nil {
 			log.Printf("Failed to close file: %v", err)
 		}
 	}(file)
@@ -53,7 +51,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	if _, err := io.Copy(buf, file); err != nil {
 		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
 			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
+			Message: "Failed to read file content: " + err.Error(),
 		})
 		return
 	}
@@ -61,18 +59,19 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	log.Printf("File read successfully, size: %d bytes", buf.Len())
 
 	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
+		log.Printf("ImportSuppliersFromFile error: %v", err)
 		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
 			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
+			Message: "Failed to import suppliers: " + err.Error(),
 		})
 		return
 	}
 
 	response := domain.HttpResponse{
 		Message: "Suppliers imported successfully",
-		Code:    http.StatusCreated,
+		Code:    http.StatusOK,
 	}
-	c.JSON(http.StatusCreated, response)
+	c.JSON(http.StatusOK, response)
 }
 
 // FindSuppliersHandler godoc

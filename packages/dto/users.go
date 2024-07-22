@@ -1,7 +1,7 @@
 package dto
 
 type CreateUserRequestDTO struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"username"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Name     string `json:"username" binding:"required"`
 }

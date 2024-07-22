@@ -3,8 +3,6 @@ package repository
 import (
 	"context"
 	"enube-challenge/packages/domain"
-	"enube-challenge/packages/models"
-
 	"gorm.io/gorm"
 )
 
@@ -18,12 +16,12 @@ func NewUsersRepository(db *gorm.DB) domain.IUserRepository {
 	}
 }
 
-func (r *usersRepository) CreateUser(ctx context.Context, user *models.Users) error {
+func (r *usersRepository) CreateUser(ctx context.Context, user *domain.User) error {
 	return r.db.Create(user).Error
 }
 
-func (r *usersRepository) FindByEmail(ctx context.Context, email string) (*models.Users, error) {
-	var user models.Users
+func (r *usersRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
+	var user domain.User
 	result := r.db.Where("email = ?", email).First(&user)
 	return &user, result.Error
 }

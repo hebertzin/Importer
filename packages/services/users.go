@@ -5,14 +5,13 @@ import (
 	"enube-challenge/packages/domain"
 	"enube-challenge/packages/errors"
 	"enube-challenge/packages/logging"
-	"enube-challenge/packages/models"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UsersService interface {
-	Create(ctx context.Context, user *models.Users) (*models.Users, error)
-	FindByEmail(ctx context.Context, email string) (*models.Users, error)
+	Create(ctx context.Context, user *domain.User) (*domain.User, error)
+	FindByEmail(ctx context.Context, email string) (*domain.User, error)
 }
 
 type userService struct {
@@ -25,7 +24,7 @@ func NewUsersService(repo domain.IUserRepository) *userService {
 	}
 }
 
-func (s *userService) Create(ctx context.Context, user *models.Users) (*models.Users, error) {
+func (s *userService) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -41,7 +40,7 @@ func (s *userService) Create(ctx context.Context, user *models.Users) (*models.U
 	return user, nil
 }
 
-func (s *userService) FindByEmail(ctx context.Context, email string) (*models.Users, error) {
+func (s *userService) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return nil, errors.ErrUserNotFound
