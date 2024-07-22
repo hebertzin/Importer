@@ -274,7 +274,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Suppliers imported successfully\" example(domain.HttpResponse{Message: \"Suppliers imported successfully\", Code: 200, Body: nil})",
+                        "description": "Suppliers imported successfully",
                         "schema": {
                             "$ref": "#/definitions/domain.HttpResponse"
                         }

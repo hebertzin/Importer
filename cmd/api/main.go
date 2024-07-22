@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "enube-challenge/docs"
 	"enube-challenge/packages/config"
 	"enube-challenge/packages/database"
 	"enube-challenge/packages/logging"
@@ -33,7 +34,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/api/v1/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	routes.UserRouter(r, db)
 	routes.AuthRouter(r, db)

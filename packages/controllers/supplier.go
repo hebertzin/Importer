@@ -72,7 +72,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 		Message: "Suppliers imported successfully",
 		Code:    http.StatusCreated,
 	}
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusCreated, response)
 }
 
 // FindSuppliersHandler godoc
