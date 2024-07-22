@@ -1,6 +1,6 @@
 # Enube-challenge
 
-A file importer created with Golang following best practices in software development, it also has some features such as user authentication generated tokens, pipelines for continuous integration and much more.
+Enube-Challenge is a file import application developed in Golang. This project follow good software development practices and features robust functionalities, including user authentication with JWT tokens, CI/CD pipelines for seamless integration, and data management using PostgreSQL. Designed to handle and import supplier data, the application provides endpoints for user authentication, creation and retrieval of user information, and supplier management.
 
 ## Techs
 
