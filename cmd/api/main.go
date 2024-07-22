@@ -24,23 +24,23 @@ import (
 func main() {
 	logging.InitLogger()
 	defer logging.Log.Sync()
-	c := config.LoadConfig()
-	db := database.ConnectDatabase(c)
+	dbConfig := config.LoadConfig()
+	db := database.ConnectDatabase(dbConfig)
 
 	err := database.Migrate(db)
 	if err != nil {
 		logging.Log.Fatal("Error migrating database", zap.Error(err))
 	}
 
-	r := gin.Default()
+	router := gin.Default()
 
-	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	routes.UserRouter(r, db)
-	routes.AuthRouter(r, db)
-	routes.Suppliers(r, db)
+	routes.UserRouter(router, db)
+	routes.AuthRouter(router, db)
+	routes.Suppliers(router, db)
 
-	if err := r.Run(":8080"); err != nil {
+	if err := router.Run(":8080"); err != nil {
 		logging.Log.Fatal("Failed to start server", zap.Error(err))
 	}
 }

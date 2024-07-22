@@ -2,10 +2,19 @@ package domain
 
 import (
 	"context"
-	"enube-challenge/packages/models"
+	"time"
 )
 
+type User struct {
+	ID        int
+	Username  string
+	Password  string
+	Email     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type IUserRepository interface {
-	CreateUser(ctx context.Context, user *models.Users) error
-	FindByEmail(ctx context.Context, email string) (*models.Users, error)
+	CreateUser(ctx context.Context, user *User) error
+	FindByEmail(ctx context.Context, email string) (*User, error)
 }

@@ -4,7 +4,6 @@ import (
 	"enube-challenge/packages/domain"
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/errors"
-	"enube-challenge/packages/models"
 	"enube-challenge/packages/services"
 	"net/http"
 
@@ -41,7 +40,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		return
 	}
 
-	user := models.Users{
+	user := domain.User{
 		Email:    req.Email,
 		Username: req.Name,
 	}
