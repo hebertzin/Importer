@@ -1,0 +1,238 @@
+basePath: /api/v1
+definitions:
+  domain.HttpResponse:
+    properties:
+      body: {}
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  dto.CreateUserRequestDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.LoginRequestDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.Users:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: hebertsantosdeveloper@gmail.com
+    name: Hebert santos
+    url: https://www.hebertzin.com/
+  description: Enube challenge
+  title: Enube challenge
+  version: "1.0"
+paths:
+  /api/v1/authentication/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: This function logs in a user and generates a token.
+      parameters:
+      - description: Login Request
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Sign-in a user
+      tags:
+      - auth
+  /api/v1/suppliers/:id:
+    get:
+      consumes:
+      - application/json
+      description: Get a supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieve a supplier
+      tags:
+      - suppliers
+  /api/v1/suppliers/import:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of suppliers from the database
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of suppliers per page
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Retrieve a list of suppliers with pagination
+      tags:
+      - suppliers
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user in the system. The user data is provided in
+        the request body.
+      parameters:
+      - description: Create User Request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Users'
+        "400":
+          description: Bad Request
+          schema:
+            type: Invalid
+        "409":
+          description: Conflict
+          schema:
+            type: User
+      summary: Create a new user
+      tags:
+      - users
+  /api/v1/users/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a user from the database based on the provided email
+        address.
+      parameters:
+      - description: User Email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Find a user in the database by email
+      tags:
+      - users
+  /suppliers/import:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Import suppliers from an Excel file. The file should be an Excel
+        file (.xlsx) containing supplier data.
+      parameters:
+      - description: Suppliers Excel file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Suppliers imported successfully
+          schema:
+            $ref: '#/definitions/domain.HttpResponse'
+        "400":
+          description: Failed to read file
+          schema:
+            $ref: '#/definitions/domain.HttpResponse'
+        "500":
+          description: Failed to import suppliers
+          schema:
+            $ref: '#/definitions/domain.HttpResponse'
+      summary: Import suppliers from an Excel file
+      tags:
+      - suppliers
+swagger: "2.0"
