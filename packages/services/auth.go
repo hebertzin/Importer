@@ -3,8 +3,6 @@ package services
 import (
 	"context"
 	"enube-challenge/packages/domain"
-	"enube-challenge/packages/logging"
-	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -26,7 +24,6 @@ func NewAuthService(repo domain.IUserRepository, jwtService *JWTService) *authSe
 }
 
 func (s *authService) Auth(ctx context.Context, email string, password string) (domain.HttpResponse, error) {
-	logger := logging.Log.With(zap.String("context", "auth_service"))
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return domain.HttpResponse{
@@ -51,7 +48,6 @@ func (s *authService) Auth(ctx context.Context, email string, password string) (
 		}, err
 	}
 
-	logger.Info("Token generated", zap.String("token", token))
 	return domain.HttpResponse{
 		Message: "Authentication successful",
 		Code:    http.StatusOK,

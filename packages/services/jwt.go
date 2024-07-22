@@ -1,7 +1,9 @@
 package services
 
 import (
+	"enube-challenge/packages/domain" // Importa a interface Token e Claims
 	"enube-challenge/packages/logging"
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"go.uber.org/zap"
 	"os"
@@ -12,11 +14,6 @@ var (
 	SecretKey = []byte(os.Getenv("SECRET_JWT"))
 )
 
-type Claims struct {
-	Email string `json:"email"`
-	jwt.RegisteredClaims
-}
-
 type JWTService struct{}
 
 func NewJWTService() *JWTService {
@@ -25,14 +22,11 @@ func NewJWTService() *JWTService {
 
 func (s *JWTService) SignIn(email string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
-	claims := &Claims{
-		Email: email,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
-		},
-	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"email": email,
+		"exp":   expirationTime.Unix(),
+	})
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(SecretKey)
 	if err != nil {
 		logging.Log.Error("Failed to sign JWT", zap.Error(err))
@@ -42,20 +36,24 @@ func (s *JWTService) SignIn(email string) (string, error) {
 	return tokenString, nil
 }
 
-func (s *JWTService) Verify(tokenString string) (*Claims, error) {
-	claims := &Claims{}
-	logging.Log.Info("Verifying token", zap.String("token", tokenString))
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+func (s *JWTService) Verify(tokenString string) (domain.Claims, error) {
+	claims := jwt.MapClaims{}
+	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 		return SecretKey, nil
 	})
 	if err != nil {
 		logging.Log.Error("Failed to parse token", zap.String("token", tokenString), zap.Error(err))
-		return nil, err
+		return domain.Claims{}, err
 	}
 	if !token.Valid {
 		logging.Log.Error("Invalid token", zap.String("token", tokenString))
-		return nil, err
+		return domain.Claims{}, err
 	}
 
-	return claims, nil
+	email, ok := claims["email"].(string)
+	if !ok {
+		return domain.Claims{}, fmt.Errorf("invalid token claims")
+	}
+
+	return domain.Claims{Email: email}, nil
 }

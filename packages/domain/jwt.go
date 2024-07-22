@@ -1,8 +1,10 @@
 package domain
 
-import "github.com/golang-jwt/jwt/v5"
-
 type Token interface {
 	SignIn(email string) (string, error)
-	Verify(tokenString string) (*jwt.Claims, error)
+	Verify(tokenString string) (Claims, error)
+}
+
+type Claims struct {
+	Email string
 }
