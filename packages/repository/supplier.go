@@ -1,4 +1,3 @@
-// repository/supplier_repository.go
 package repository
 
 import (
