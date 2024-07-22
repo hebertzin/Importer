@@ -71,15 +71,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: string
         "401":
           description: Unauthorized
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: string
       summary: Sign-in a user
       tags:
       - auth
@@ -193,15 +189,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: string
         "404":
           description: Not Found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            type: string
       summary: Find a user in the database by email
       tags:
       - users
