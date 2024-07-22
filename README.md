@@ -32,9 +32,10 @@ A file importer created with Golang following best practices in software develop
 - **GET** `/api/v1/suppliers` : Get all suppliers with pagination
 - **GET** `/api/v1/suppliers/:id` : Get a suppliers by id
 
-## Docs api
+## Docs api (Github pages)
 
-- **GET** `/api/v1/swagger/index.html` : See the docs
+[![Texto alternativo](https://github.com/user-attachments/assets/59a1f914-0c72-421a-8a98-91eece7c3c17)](https://hebertsanto.github.io/Enube-challenge/)
+
 
 
 ## Running this project
