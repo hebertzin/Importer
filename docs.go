@@ -298,6 +298,11 @@ const docTemplate = `{
         },
         "dto.CreateUserRequestDTO": {
             "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
