@@ -9,21 +9,20 @@ import (
 	"go.uber.org/zap"
 	"sync"
 
-	"enube-challenge/packages/models"
 	"github.com/xuri/excelize/v2"
 )
 
 type SupplierService interface {
 	ImportSuppliersFromFile(ctx context.Context, file []byte) error
-	GetSuppliers(ctx context.Context, page, pageSize int) ([]models.Supplier, error)
-	FindSupplierById(ctx context.Context, id int) (*models.Supplier, error)
+	GetSuppliers(ctx context.Context, page, pageSize int) ([]domain.Supplier, error)
+	FindSupplierById(ctx context.Context, id int) (*domain.Supplier, error)
 }
 
 type supplierService struct {
-	repo domain.Supplier
+	repo domain.SupplierRepository
 }
 
-func NewSupplierService(repo domain.Supplier) SupplierService {
+func NewSupplierService(repo domain.SupplierRepository) SupplierService {
 	return &supplierService{repo: repo}
 }
 
@@ -44,12 +43,12 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 		return err
 	}
 
-	const numWorkers = 6
+	const numWorkers = 7
 	const batchSize = 1000
 
 	var wg sync.WaitGroup
 	rowChan := make(chan []string, numWorkers)
-	supplierChan := make(chan models.Supplier, batchSize)
+	supplierChan := make(chan domain.Supplier, batchSize)
 	errChan := make(chan error, 1)
 
 	worker := func() {
@@ -59,7 +58,7 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 				row = append(row, "")
 			}
 
-			supplier := models.Supplier{
+			supplier := domain.Supplier{
 				PartnerId:                     row[0],
 				PartnerName:                   row[1],
 				CustomerId:                    row[2],
@@ -119,7 +118,7 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 
 			select {
 			case supplierChan <- supplier:
-			case errChan <- fmt.Errorf("failed to save supplier: %w", err):
+			case <-ctx.Done():
 				return
 			}
 		}
@@ -154,10 +153,10 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 	return nil
 }
 
-func (s *supplierService) GetSuppliers(ctx context.Context, page, pageSize int) ([]models.Supplier, error) {
+func (s *supplierService) GetSuppliers(ctx context.Context, page, pageSize int) ([]domain.Supplier, error) {
 	return s.repo.FindAllSuppliers(ctx, page, pageSize)
 }
 
-func (s *supplierService) FindSupplierById(ctx context.Context, id int) (*models.Supplier, error) {
+func (s *supplierService) FindSupplierById(ctx context.Context, id int) (*domain.Supplier, error) {
 	return s.repo.FindSupplierById(ctx, id)
 }

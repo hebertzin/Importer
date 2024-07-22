@@ -1,7 +1,7 @@
 package services
 
 import (
-	"enube-challenge/packages/domain" // Importa a interface Token e Claims
+	"enube-challenge/packages/domain"
 	"enube-challenge/packages/logging"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"

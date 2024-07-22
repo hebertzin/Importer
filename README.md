@@ -14,7 +14,7 @@ Enube-Challenge is a file import application developed in Golang. This project f
 * [Swaggo](https://github.com/swaggo) - Api docs
 * [Railway](https://railway.app/) - Deploy database
 * [Zap](https://github.com/uber-go/zap) - Logs of the application
-* [Postman](https://www.postman.com/) - Logs of the application
+* [Postman](https://www.postman.com/) - Testing and documenting APIs.
 
 ## **Endpoints**
 
