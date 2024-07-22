@@ -68,8 +68,8 @@ func (uc *UserController) Create(ctx *gin.Context) {
 // @Produce      json
 // @Param        email path string true "User Email"
 // @Success      200
-// @Failure      400  {object} map[string]string
-// @Failure      404  {object} map[string]string
+// @Failure      400  {string} Bad request
+// @Failure      404  {string} Not found
 // @Router       /api/v1/users/{email} [get]
 func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	var email string = ctx.Param("email")
