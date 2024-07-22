@@ -25,8 +25,8 @@ func NewAuthController(authService services.AuthService) *AuthController {
 // @Produce  json
 // @Param login body dto.LoginRequestDTO true "Login Request"
 // @Success 200
-// @Failure 400 {object} map[string]string
-// @Failure 401 {object} map[string]string
+// @Failure 400 {string} Bad request
+// @Failure 401 {string} Unauthorized
 // @Router /api/v1/authentication/sign-in [post]
 func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 	var req dto.LoginRequestDTO

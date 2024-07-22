@@ -50,19 +50,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
                         }
                     }
                 }
@@ -232,19 +226,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "type": "string"
                         }
                     }
                 }
@@ -274,7 +262,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Suppliers imported successfully\" example(domain.HttpResponse{Message: \"Suppliers imported successfully\", Code: 200, Body: nil})",
+                        "description": "Suppliers imported successfully",
                         "schema": {
                             "$ref": "#/definitions/domain.HttpResponse"
                         }
