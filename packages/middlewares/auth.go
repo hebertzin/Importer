@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/services"
 	"net/http"
 	"strings"
@@ -13,7 +13,7 @@ func AuthMiddleware(jwtService *services.JWTService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, domain.HttpResponse{
+			c.JSON(http.StatusUnauthorized, domains.HttpResponse{
 				Code:    http.StatusUnauthorized,
 				Message: "Authorization header is required",
 			})
@@ -23,7 +23,7 @@ func AuthMiddleware(jwtService *services.JWTService) gin.HandlerFunc {
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 		if tokenString == authHeader {
-			c.JSON(http.StatusUnauthorized, domain.HttpResponse{
+			c.JSON(http.StatusUnauthorized, domains.HttpResponse{
 				Code:    http.StatusUnauthorized,
 				Message: "Bearer token is required",
 			})
@@ -33,7 +33,7 @@ func AuthMiddleware(jwtService *services.JWTService) gin.HandlerFunc {
 
 		claims, err := jwtService.Verify(tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, domain.HttpResponse{
+			c.JSON(http.StatusUnauthorized, domains.HttpResponse{
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
 			})

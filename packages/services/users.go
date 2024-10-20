@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/errors"
 	"enube-challenge/packages/logging"
 	"go.uber.org/zap"
@@ -10,29 +10,27 @@ import (
 )
 
 type UsersService interface {
-	Create(ctx context.Context, user *domain.User) (*domain.User, error)
-	FindByEmail(ctx context.Context, email string) (*domain.User, error)
+	Create(ctx context.Context, user *domains.User) (*domains.User, error)
+	FindByEmail(ctx context.Context, email string) (*domains.User, error)
 }
 
 type userService struct {
-	repo domain.IUserRepository
+	repo domains.UsersRepository
 }
 
-func NewUsersService(repo domain.IUserRepository) *userService {
+func NewUsersService(repo domains.UsersRepository) *userService {
 	return &userService{
 		repo: repo,
 	}
 }
 
-func (s *userService) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
-
+func (s *userService) Create(ctx context.Context, user *domains.User) (*domains.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		logging.Log.Error("Some error has been ocurred", zap.Error(err))
 		return nil, err
 	}
 	user.Password = string(hashedPassword)
-
 	err = s.repo.CreateUser(ctx, user)
 	if err != nil {
 		return nil, errors.ErrUserAlreadyExist
@@ -40,7 +38,7 @@ func (s *userService) Create(ctx context.Context, user *domain.User) (*domain.Us
 	return user, nil
 }
 
-func (s *userService) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
+func (s *userService) FindByEmail(ctx context.Context, email string) (*domains.User, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return nil, errors.ErrUserNotFound

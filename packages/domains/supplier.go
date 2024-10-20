@@ -1,4 +1,4 @@
-package domain
+package domains
 
 import (
 	"context"
@@ -66,5 +66,11 @@ type Supplier struct {
 type SupplierRepository interface {
 	SaveSuppliers(ctx context.Context, suppliersChan <-chan Supplier, batchSize int) error
 	FindAllSuppliers(ctx context.Context, page, pageSize int) ([]Supplier, error)
+	FindSupplierById(ctx context.Context, id int) (*Supplier, error)
+}
+
+type SupplierService interface {
+	ImportSuppliersFromFile(ctx context.Context, file []byte) error
+	GetSuppliers(ctx context.Context, page, pageSize int) ([]Supplier, error)
 	FindSupplierById(ctx context.Context, id int) (*Supplier, error)
 }

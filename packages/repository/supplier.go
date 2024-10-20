@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/logging"
 	"log"
 
@@ -13,12 +13,12 @@ type repository struct {
 	db *gorm.DB
 }
 
-func NewSupplierRepository(db *gorm.DB) domain.SupplierRepository {
+func NewSupplierRepository(db *gorm.DB) domains.SupplierRepository {
 	return &repository{db: db}
 }
 
-func (r *repository) SaveSuppliers(ctx context.Context, suppliersChan <-chan domain.Supplier, batchSize int) error {
-	var suppliers []domain.Supplier
+func (r *repository) SaveSuppliers(ctx context.Context, suppliersChan <-chan domains.Supplier, batchSize int) error {
+	var suppliers []domains.Supplier
 	for supplier := range suppliersChan {
 		suppliers = append(suppliers, supplier)
 		if len(suppliers) >= batchSize {
@@ -36,7 +36,7 @@ func (r *repository) SaveSuppliers(ctx context.Context, suppliersChan <-chan dom
 	return nil
 }
 
-func (r *repository) uploadSuppliers(ctx context.Context, suppliers []domain.Supplier) error {
+func (r *repository) uploadSuppliers(ctx context.Context, suppliers []domains.Supplier) error {
 	if len(suppliers) == 0 {
 		log.Println("No suppliers to upload")
 		return nil
@@ -53,7 +53,7 @@ func (r *repository) uploadSuppliers(ctx context.Context, suppliers []domain.Sup
 	return nil
 }
 
-func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) ([]domain.Supplier, error) {
+func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) ([]domains.Supplier, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -63,7 +63,7 @@ func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) (
 
 	offset := (page - 1) * pageSize
 
-	var suppliers []domain.Supplier
+	var suppliers []domains.Supplier
 	result := r.db.WithContext(ctx).
 		Offset(offset).
 		Limit(pageSize).
@@ -76,8 +76,8 @@ func (r *repository) FindAllSuppliers(ctx context.Context, page, pageSize int) (
 	return suppliers, nil
 }
 
-func (r *repository) FindSupplierById(ctx context.Context, id int) (*domain.Supplier, error) {
-	var supplier domain.Supplier
+func (r *repository) FindSupplierById(ctx context.Context, id int) (*domains.Supplier, error) {
+	var supplier domains.Supplier
 	result := r.db.WithContext(ctx).Where("id = ?", id).First(&supplier)
 	if result.Error != nil {
 		return nil, result.Error

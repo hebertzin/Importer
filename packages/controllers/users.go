@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/errors"
 	"enube-challenge/packages/services"
@@ -40,7 +40,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		return
 	}
 
-	user := domain.User{
+	user := domains.User{
 		Email:    req.Email,
 		Username: req.Name,
 	}
@@ -51,7 +51,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Code:    http.StatusCreated,
 		Body:    createdUser,
 		Message: "User created successfully",
@@ -80,7 +80,7 @@ func (uc *UserController) FindByEmail(ctx *gin.Context) {
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Code:    http.StatusOK,
 		Message: "User successfully find",
 		Body:    u,

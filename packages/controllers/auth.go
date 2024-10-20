@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/services"
 	"net/http"
@@ -31,7 +31,7 @@ func NewAuthController(authService services.AuthService) *AuthController {
 func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 	var req dto.LoginRequestDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		response := domain.HttpResponse{
+		response := domains.HttpResponse{
 			Message: "Invalid request body",
 			Code:    http.StatusBadRequest,
 		}
@@ -41,7 +41,7 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 
 	authResponse, err := ctrl.authService.Auth(c.Request.Context(), req.Email, req.Password)
 	if err != nil {
-		response := domain.HttpResponse{
+		response := domains.HttpResponse{
 			Message: authResponse.Message,
 			Code:    authResponse.Code,
 		}
@@ -49,7 +49,7 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Message: "User logged in successfully",
 		Code:    http.StatusOK,
 		Body:    authResponse.Body,

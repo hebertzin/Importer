@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"bytes"
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/services"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -28,14 +28,14 @@ func NewSupplierController(service services.SupplierService) *SupplierController
 // @Accept multipart/form-data
 // @Produce json
 // @Param file formData file true "Suppliers Excel file"
-// @Success 200 {object} domain.HttpResponse "Suppliers imported successfully"
-// @Failure 400 {object} domain.HttpResponse "Failed to read file"
-// @Failure 500 {object} domain.HttpResponse "Failed to import suppliers"
+// @Success 200 {object} domains.HttpResponse "Suppliers imported successfully"
+// @Failure 400 {object} domains.HttpResponse "Failed to read file"
+// @Failure 500 {object} domains.HttpResponse "Failed to import suppliers"
 // @Router /suppliers/import [post]
 func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	file, _, err := c.Request.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.HttpResponse{
+		c.JSON(http.StatusBadRequest, domains.HttpResponse{
 			Code:    http.StatusBadRequest,
 			Message: "Failed to retrieve file from request: " + err.Error(),
 		})
@@ -49,7 +49,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
-		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
+		c.JSON(http.StatusInternalServerError, domains.HttpResponse{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to read file content: " + err.Error(),
 		})
@@ -60,14 +60,14 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 
 	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
 		log.Printf("ImportSuppliersFromFile error: %v", err)
-		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
+		c.JSON(http.StatusInternalServerError, domains.HttpResponse{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to import suppliers: " + err.Error(),
 		})
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Message: "Suppliers imported successfully",
 		Code:    http.StatusOK,
 	}
@@ -142,7 +142,7 @@ func (ctrl *SupplierController) FindSupplierById(ctx *gin.Context) {
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Code:    http.StatusOK,
 		Message: "Supplier successfully found",
 		Body:    supplier,

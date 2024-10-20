@@ -3,7 +3,7 @@ package services
 import (
 	"bytes"
 	"context"
-	"enube-challenge/packages/domain"
+	"enube-challenge/packages/domains"
 	"enube-challenge/packages/logging"
 	"fmt"
 	"go.uber.org/zap"
@@ -12,17 +12,11 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-type SupplierService interface {
-	ImportSuppliersFromFile(ctx context.Context, file []byte) error
-	GetSuppliers(ctx context.Context, page, pageSize int) ([]domain.Supplier, error)
-	FindSupplierById(ctx context.Context, id int) (*domain.Supplier, error)
-}
-
 type supplierService struct {
-	repo domain.SupplierRepository
+	repo domains.SupplierRepository
 }
 
-func NewSupplierService(repo domain.SupplierRepository) SupplierService {
+func NewSupplierService(repo domains.SupplierRepository) domains.SupplierService {
 	return &supplierService{repo: repo}
 }
 
@@ -48,7 +42,7 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 
 	var wg sync.WaitGroup
 	rowChan := make(chan []string, numWorkers)
-	supplierChan := make(chan domain.Supplier, batchSize)
+	supplierChan := make(chan domains.Supplier, batchSize)
 	errChan := make(chan error, 1)
 
 	worker := func() {
@@ -58,7 +52,7 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 				row = append(row, "")
 			}
 
-			supplier := domain.Supplier{
+			supplier := domains.Supplier{
 				PartnerId:                     row[0],
 				PartnerName:                   row[1],
 				CustomerId:                    row[2],
@@ -153,10 +147,10 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 	return nil
 }
 
-func (s *supplierService) GetSuppliers(ctx context.Context, page, pageSize int) ([]domain.Supplier, error) {
+func (s *supplierService) GetSuppliers(ctx context.Context, page, pageSize int) ([]domains.Supplier, error) {
 	return s.repo.FindAllSuppliers(ctx, page, pageSize)
 }
 
-func (s *supplierService) FindSupplierById(ctx context.Context, id int) (*domain.Supplier, error) {
+func (s *supplierService) FindSupplierById(ctx context.Context, id int) (*domains.Supplier, error) {
 	return s.repo.FindSupplierById(ctx, id)
 }
