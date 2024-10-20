@@ -4,17 +4,16 @@ import (
 	"enube-challenge/packages/domains"
 	"enube-challenge/packages/dto"
 	"enube-challenge/packages/errors"
-	"enube-challenge/packages/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	userService services.UsersService
+	userService domains.UsersService
 }
 
-func NewUserController(s services.UsersService) *UserController {
+func NewUserController(s domains.UsersService) *UserController {
 	return &UserController{
 		userService: s,
 	}
@@ -72,14 +71,11 @@ func (uc *UserController) Create(ctx *gin.Context) {
 // @Router       /api/v1/users/{email} [get]
 func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	var email string = ctx.Param("email")
-
 	u, err := uc.userService.FindByEmail(ctx, email)
-
 	if err != nil {
 		errors.UserNotFoundHandler(ctx, ctx.Error(err))
 		return
 	}
-
 	response := domains.HttpResponse{
 		Code:    http.StatusOK,
 		Message: "User successfully find",
