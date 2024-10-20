@@ -39,24 +39,21 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		})
 		return
 	}
-
 	user := domain.User{
 		Email:    req.Email,
 		Username: req.Name,
 	}
-
 	createdUser, err := uc.userService.Create(ctx.Request.Context(), &user)
 	if err != nil {
 		errors.UserAlreadyExistHandler(ctx, ctx.Error(err))
 		return
 	}
-
 	response := domain.HttpResponse{
 		Code:    http.StatusCreated,
 		Body:    createdUser,
 		Message: "User created successfully",
 	}
-	ctx.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusCreated, response)
 }
 
 // FindByEmail godoc
@@ -72,18 +69,15 @@ func (uc *UserController) Create(ctx *gin.Context) {
 // @Router       /api/v1/users/{email} [get]
 func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	var email string = ctx.Param("email")
-
 	u, err := uc.userService.FindByEmail(ctx, email)
-
 	if err != nil {
 		errors.UserNotFoundHandler(ctx, ctx.Error(err))
 		return
 	}
-
-	response := domain.HttpResponse{
+	user := domain.HttpResponse{
 		Code:    http.StatusOK,
 		Message: "User successfully find",
 		Body:    u,
 	}
-	ctx.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusOK, user)
 }
