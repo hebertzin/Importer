@@ -2,9 +2,9 @@ package main
 
 import (
 	_ "enube-challenge/docs"
-	"enube-challenge/packages/config"
-	"enube-challenge/packages/database"
-	"enube-challenge/packages/logging"
+	"enube-challenge/packages/infra/config"
+	database2 "enube-challenge/packages/infra/db"
+	"enube-challenge/packages/infra/logging"
 	appRoutes "enube-challenge/packages/presentation/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
@@ -25,11 +25,11 @@ func main() {
 	logging.InitLogger()
 	defer logging.Log.Sync()
 	dbConfig := config.LoadConfig()
-	db := database.ConnectDatabase(dbConfig)
+	db := database2.ConnectDatabase(dbConfig)
 
-	err := database.Migrate(db)
+	err := database2.Migrate(db)
 	if err != nil {
-		logging.Log.Fatal("Error migrating database", zap.Error(err))
+		logging.Log.Fatal("Error migrating db", zap.Error(err))
 	}
 
 	router := gin.Default()

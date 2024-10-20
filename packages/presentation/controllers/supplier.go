@@ -13,11 +13,11 @@ import (
 )
 
 type SupplierController struct {
-	service domains.SupplierService
+	supplierUseCase domains.SupplierUseCase
 }
 
-func NewSupplierController(service domains.SupplierService) *SupplierController {
-	return &SupplierController{service}
+func NewSupplierController(supplierUseCase domains.SupplierUseCase) *SupplierController {
+	return &SupplierController{supplierUseCase}
 }
 
 // ImportSuppliersHandler godoc
@@ -57,7 +57,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 
 	log.Printf("File read successfully, size: %d bytes", buf.Len())
 
-	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
+	if err := ctrl.supplierUseCase.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
 		log.Printf("ImportSuppliersFromFile error: %v", err)
 		c.JSON(http.StatusInternalServerError, domains.HttpResponse{
 			Code:    http.StatusInternalServerError,
@@ -75,7 +75,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 
 // FindSuppliersHandler godoc
 // @Summary Retrieve a list of suppliers with pagination
-// @Description Get a paginated list of suppliers from the database
+// @Description Get a paginated list of suppliers from the db
 // @Tags suppliers
 // @Accept  json
 // @Produce  json
@@ -99,7 +99,7 @@ func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
 		return
 	}
 
-	suppliers, err := ctrl.service.GetSuppliers(c.Request.Context(), page, pageSize)
+	suppliers, err := ctrl.supplierUseCase.GetSuppliers(c.Request.Context(), page, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Failed to retrieve suppliers: %v", err)})
 		return
@@ -133,7 +133,7 @@ func (ctrl *SupplierController) FindSupplierById(ctx *gin.Context) {
 		return
 	}
 
-	supplier, err := ctrl.service.FindSupplierById(ctx.Request.Context(), id)
+	supplier, err := ctrl.supplierUseCase.FindSupplierById(ctx.Request.Context(), id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Supplier not found"})
 		return

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/logging"
+	"enube-challenge/packages/infra/logging"
 	"log"
 
 	"gorm.io/gorm"

@@ -1,25 +1,25 @@
-package services
+package usecases
 
 import (
 	"context"
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/errors"
-	"enube-challenge/packages/logging"
+	"enube-challenge/packages/infra/errors"
+	"enube-challenge/packages/infra/logging"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type userService struct {
+type usersUseCase struct {
 	repo domains.UsersRepository
 }
 
-func NewUsersService(repo domains.UsersRepository) *userService {
-	return &userService{
+func NewUserUseCase(repo domains.UsersRepository) *usersUseCase {
+	return &usersUseCase{
 		repo: repo,
 	}
 }
 
-func (s *userService) Create(ctx context.Context, user *domains.User) (*domains.User, error) {
+func (s *usersUseCase) Create(ctx context.Context, user *domains.User) (*domains.User, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		logging.Log.Error("Some error has been ocurred", zap.Error(err))
@@ -33,7 +33,7 @@ func (s *userService) Create(ctx context.Context, user *domains.User) (*domains.
 	return user, nil
 }
 
-func (s *userService) FindByEmail(ctx context.Context, email string) (*domains.User, error) {
+func (s *usersUseCase) FindByEmail(ctx context.Context, email string) (*domains.User, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return nil, errors.ErrUserNotFound

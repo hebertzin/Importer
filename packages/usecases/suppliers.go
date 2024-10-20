@@ -1,10 +1,10 @@
-package services
+package usecases
 
 import (
 	"bytes"
 	"context"
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/logging"
+	"enube-challenge/packages/infra/logging"
 	"fmt"
 	"go.uber.org/zap"
 	"sync"
@@ -12,15 +12,15 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-type supplierService struct {
+type supplierUseCase struct {
 	repo domains.SupplierRepository
 }
 
-func NewSupplierService(repo domains.SupplierRepository) domains.SupplierService {
-	return &supplierService{repo: repo}
+func NewSupplierUseCase(repo domains.SupplierRepository) domains.SupplierUseCase {
+	return &supplierUseCase{repo: repo}
 }
 
-func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []byte) error {
+func (s *supplierUseCase) ImportSuppliersFromFile(ctx context.Context, file []byte) error {
 	f, err := excelize.OpenReader(bytes.NewReader(file))
 	if err != nil {
 		return fmt.Errorf("failed to open excel file: %w", err)
@@ -147,10 +147,10 @@ func (s *supplierService) ImportSuppliersFromFile(ctx context.Context, file []by
 	return nil
 }
 
-func (s *supplierService) GetSuppliers(ctx context.Context, page, pageSize int) ([]domains.Supplier, error) {
+func (s *supplierUseCase) GetSuppliers(ctx context.Context, page, pageSize int) ([]domains.Supplier, error) {
 	return s.repo.FindAllSuppliers(ctx, page, pageSize)
 }
 
-func (s *supplierService) FindSupplierById(ctx context.Context, id int) (*domains.Supplier, error) {
+func (s *supplierUseCase) FindSupplierById(ctx context.Context, id int) (*domains.Supplier, error) {
 	return s.repo.FindSupplierById(ctx, id)
 }

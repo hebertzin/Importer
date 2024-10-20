@@ -1,8 +1,8 @@
-package services
+package usecases
 
 import (
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/logging"
+	"enube-challenge/packages/infra/logging"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"go.uber.org/zap"
@@ -14,13 +14,13 @@ var (
 	SecretKey = []byte(os.Getenv("SECRET_JWT"))
 )
 
-type JWTService struct{}
+type JWTUseCase struct{}
 
-func NewJWTService() *JWTService {
-	return &JWTService{}
+func NewJWTUseCase() *JWTUseCase {
+	return &JWTUseCase{}
 }
 
-func (s *JWTService) SignIn(email string) (string, error) {
+func (s *JWTUseCase) SignIn(email string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
@@ -35,7 +35,7 @@ func (s *JWTService) SignIn(email string) (string, error) {
 	return tokenString, nil
 }
 
-func (s *JWTService) Verify(tokenString string) (domains.Claims, error) {
+func (s *JWTUseCase) Verify(tokenString string) (domains.Claims, error) {
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 		return SecretKey, nil

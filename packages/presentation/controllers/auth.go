@@ -2,18 +2,18 @@ package controllers
 
 import (
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/dto"
+	"enube-challenge/packages/infra/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
-	authService domains.AuthService
+	authUseCase domains.AuthUseCase
 }
 
-func NewAuthController(authService domains.AuthService) *AuthController {
-	return &AuthController{authService: authService}
+func NewAuthController(authUseCase domains.AuthUseCase) *AuthController {
+	return &AuthController{authUseCase: authUseCase}
 }
 
 // SignInHandler godoc
@@ -38,7 +38,7 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 		return
 	}
 
-	authResponse, err := ctrl.authService.Auth(c.Request.Context(), req.Email, req.Password)
+	authResponse, err := ctrl.authUseCase.Auth(c.Request.Context(), req.Email, req.Password)
 	if err != nil {
 		response := domains.HttpResponse{
 			Message: authResponse.Message,

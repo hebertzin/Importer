@@ -1,4 +1,4 @@
-package services
+package usecases
 
 import (
 	"context"
@@ -7,19 +7,19 @@ import (
 	"net/http"
 )
 
-type authService struct {
+type authUsecase struct {
 	repo       domains.UsersRepository
-	jwtService *JWTService
+	jwtUseCase *JWTUseCase
 }
 
-func NewAuthService(repo domains.UsersRepository, jwtService *JWTService) *authService {
-	return &authService{
+func NewAuthUseCase(repo domains.UsersRepository, jwtUseCase *JWTUseCase) *authUsecase {
+	return &authUsecase{
 		repo:       repo,
-		jwtService: jwtService,
+		jwtUseCase: jwtUseCase,
 	}
 }
 
-func (s *authService) Auth(ctx context.Context, email string, password string) (domains.HttpResponse, error) {
+func (s *authUsecase) Auth(ctx context.Context, email string, password string) (domains.HttpResponse, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
 		return domains.HttpResponse{
@@ -35,7 +35,7 @@ func (s *authService) Auth(ctx context.Context, email string, password string) (
 		}, err
 	}
 
-	token, err := s.jwtService.SignIn(user.Email)
+	token, err := s.jwtUseCase.SignIn(user.Email)
 	if err != nil {
 		return domains.HttpResponse{
 			Message: "Failed to generate token",

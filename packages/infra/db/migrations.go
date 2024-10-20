@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"enube-challenge/packages/models"

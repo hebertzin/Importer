@@ -1,7 +1,7 @@
-package database
+package db
 
 import (
-	"enube-challenge/packages/config"
+	"enube-challenge/packages/infra/config"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -17,7 +17,7 @@ func ConnectDatabase(cfg *config.Config) *gorm.DB {
 	var err error
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Failed to connect to the database: %v", err)
+		log.Fatalf("Failed to connect to the db: %v", err)
 	}
 
 	fmt.Println("Database connection successfully established")

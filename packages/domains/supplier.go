@@ -69,7 +69,7 @@ type SupplierRepository interface {
 	FindSupplierById(ctx context.Context, id int) (*Supplier, error)
 }
 
-type SupplierService interface {
+type SupplierUseCase interface {
 	ImportSuppliersFromFile(ctx context.Context, file []byte) error
 	GetSuppliers(ctx context.Context, page, pageSize int) ([]Supplier, error)
 	FindSupplierById(ctx context.Context, id int) (*Supplier, error)

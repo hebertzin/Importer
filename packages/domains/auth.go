@@ -4,6 +4,6 @@ import (
 	"context"
 )
 
-type AuthService interface {
+type AuthUseCase interface {
 	Auth(ctx context.Context, email string, password string) (HttpResponse, error)
 }

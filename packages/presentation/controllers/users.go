@@ -2,20 +2,20 @@ package controllers
 
 import (
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/dto"
-	"enube-challenge/packages/errors"
+	"enube-challenge/packages/infra/dto"
+	"enube-challenge/packages/infra/errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	userService domains.UsersService
+	usersUseCase domains.UsersUseCase
 }
 
-func NewUserController(s domains.UsersService) *UserController {
+func NewUserController(usersUseCase domains.UsersUseCase) *UserController {
 	return &UserController{
-		userService: s,
+		usersUseCase: usersUseCase,
 	}
 }
 
@@ -44,7 +44,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 		Username: req.Name,
 	}
 
-	createdUser, err := uc.userService.Create(ctx.Request.Context(), &user)
+	createdUser, err := uc.usersUseCase.Create(ctx.Request.Context(), &user)
 	if err != nil {
 		errors.UserAlreadyExistHandler(ctx, ctx.Error(err))
 		return
@@ -59,8 +59,8 @@ func (uc *UserController) Create(ctx *gin.Context) {
 }
 
 // FindByEmail godoc
-// @Summary     Find a user in the database by email
-// @Description  Retrieves a user from the database based on the provided email address.
+// @Summary     Find a user in the db by email
+// @Description  Retrieves a user from the db based on the provided email address.
 // @Tags         users
 // @Accept       json
 // @Produce      json
@@ -71,7 +71,7 @@ func (uc *UserController) Create(ctx *gin.Context) {
 // @Router       /api/v1/users/{email} [get]
 func (uc *UserController) FindByEmail(ctx *gin.Context) {
 	var email string = ctx.Param("email")
-	u, err := uc.userService.FindByEmail(ctx, email)
+	u, err := uc.usersUseCase.FindByEmail(ctx, email)
 	if err != nil {
 		errors.UserNotFoundHandler(ctx, ctx.Error(err))
 		return

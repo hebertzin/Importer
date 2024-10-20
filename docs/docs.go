@@ -102,7 +102,7 @@ const docTemplate = `{
         },
         "/api/v1/suppliers/import": {
             "get": {
-                "description": "Get a paginated list of suppliers from the database",
+                "description": "Get a paginated list of suppliers from the db",
                 "consumes": [
                     "application/json"
                 ],
@@ -199,7 +199,7 @@ const docTemplate = `{
         },
         "/api/v1/users/{email}": {
             "get": {
-                "description": "Retrieves a user from the database based on the provided email address.",
+                "description": "Retrieves a user from the db based on the provided email address.",
                 "consumes": [
                     "application/json"
                 ],
@@ -209,7 +209,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Find a user in the database by email",
+                "summary": "Find a user in the db by email",
                 "parameters": [
                     {
                         "type": "string",

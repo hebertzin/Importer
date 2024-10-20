@@ -19,7 +19,7 @@ type UsersRepository interface {
 	FindByEmail(ctx context.Context, email string) (*User, error)
 }
 
-type UsersService interface {
+type UsersUseCase interface {
 	Create(ctx context.Context, user *User) (*User, error)
 	FindByEmail(ctx context.Context, email string) (*User, error)
 }
