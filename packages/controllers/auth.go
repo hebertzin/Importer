@@ -3,17 +3,16 @@ package controllers
 import (
 	"enube-challenge/packages/domains"
 	"enube-challenge/packages/dto"
-	"enube-challenge/packages/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
-	authService services.AuthService
+	authService domains.AuthService
 }
 
-func NewAuthController(authService services.AuthService) *AuthController {
+func NewAuthController(authService domains.AuthService) *AuthController {
 	return &AuthController{authService: authService}
 }
 

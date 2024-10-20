@@ -10,7 +10,7 @@ type usersRepository struct {
 	db *gorm.DB
 }
 
-func NewUsersRepository(db *gorm.DB) domains.IUserRepository {
+func NewUsersRepository(db *gorm.DB) domains.UsersRepository {
 	return &usersRepository{
 		db: db,
 	}

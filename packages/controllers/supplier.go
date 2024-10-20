@@ -3,7 +3,6 @@ package controllers
 import (
 	"bytes"
 	"enube-challenge/packages/domains"
-	"enube-challenge/packages/services"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -14,10 +13,10 @@ import (
 )
 
 type SupplierController struct {
-	service services.SupplierService
+	service domains.SupplierService
 }
 
-func NewSupplierController(service services.SupplierService) *SupplierController {
+func NewSupplierController(service domains.SupplierService) *SupplierController {
 	return &SupplierController{service}
 }
 
@@ -87,14 +86,12 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 // @Failure 500 {string} Failed to retrieve suppliers
 // @Router /api/v1/suppliers/import [get]
 func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
-
 	pageStr := c.DefaultQuery("page", "1")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil || page < 1 {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid page number"})
 		return
 	}
-
 	pageSizeStr := c.DefaultQuery("pageSize", "10")
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil || pageSize < 1 {

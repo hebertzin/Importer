@@ -9,11 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UsersService interface {
-	Create(ctx context.Context, user *domains.User) (*domains.User, error)
-	FindByEmail(ctx context.Context, email string) (*domains.User, error)
-}
-
 type userService struct {
 	repo domains.UsersRepository
 }
