@@ -112,7 +112,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get a paginated list of suppliers from the database
+      description: Get a paginated list of suppliers from the db
       parameters:
       - default: 1
         description: Page number
@@ -177,8 +177,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieves a user from the database based on the provided email
-        address.
+      description: Retrieves a user from the db based on the provided email address.
       parameters:
       - description: User Email
         in: path
@@ -198,7 +197,7 @@ paths:
           description: Not Found
           schema:
             type: string
-      summary: Find a user in the database by email
+      summary: Find a user in the db by email
       tags:
       - users
   /suppliers/import:
