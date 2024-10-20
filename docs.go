@@ -264,19 +264,19 @@ const docTemplate = `{
                     "200": {
                         "description": "Suppliers imported successfully",
                         "schema": {
-                            "$ref": "#/definitions/domain.HttpResponse"
+                            "$ref": "#/definitions/domains.HttpResponse"
                         }
                     },
                     "400": {
                         "description": "Failed to read file",
                         "schema": {
-                            "$ref": "#/definitions/domain.HttpResponse"
+                            "$ref": "#/definitions/domains.HttpResponse"
                         }
                     },
                     "500": {
                         "description": "Failed to import suppliers",
                         "schema": {
-                            "$ref": "#/definitions/domain.HttpResponse"
+                            "$ref": "#/definitions/domains.HttpResponse"
                         }
                     }
                 }
@@ -284,7 +284,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.HttpResponse": {
+        "domains.HttpResponse": {
             "type": "object",
             "properties": {
                 "body": {},
