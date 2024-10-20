@@ -5,7 +5,7 @@ import (
 	"enube-challenge/packages/config"
 	"enube-challenge/packages/database"
 	"enube-challenge/packages/logging"
-	"enube-challenge/packages/routes"
+	appRoutes "enube-challenge/packages/presentation/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
@@ -36,9 +36,9 @@ func main() {
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	routes.UserRouter(router, db)
-	routes.AuthRouter(router, db)
-	routes.Suppliers(router, db)
+	appRoutes.UserRouter(router, db)
+	appRoutes.AuthRouter(router, db)
+	appRoutes.Suppliers(router, db)
 
 	if err := router.Run(":8080"); err != nil {
 		logging.Log.Fatal("Failed to start server", zap.Error(err))

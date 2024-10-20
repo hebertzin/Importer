@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"enube-challenge/packages/controllers"
-	middleware "enube-challenge/packages/middlewares"
+	"enube-challenge/packages/presentation/controllers"
+	"enube-challenge/packages/presentation/middlewares"
 	"enube-challenge/packages/repository"
 	"enube-challenge/packages/services"
 	"github.com/gin-gonic/gin"

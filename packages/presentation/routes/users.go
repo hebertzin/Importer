@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"enube-challenge/packages/controllers"
-	"enube-challenge/packages/middlewares"
+	"enube-challenge/packages/presentation/controllers"
+	"enube-challenge/packages/presentation/middlewares"
 	"enube-challenge/packages/repository"
 	"enube-challenge/packages/services"
 	"github.com/gin-gonic/gin"
@@ -19,6 +19,6 @@ func UserRouter(router *gin.Engine, db *gorm.DB) {
 	usersGroup := router.Group("/api/v1")
 	{
 		usersGroup.POST("/users", userControllers.Create)
-		usersGroup.GET("/users/:email", middleware.AuthMiddleware(jwtService), userControllers.FindByEmail)
+		usersGroup.GET("/users/:email", middleware.middleware.AuthMiddleware(jwtService), userControllers.FindByEmail)
 	}
 }

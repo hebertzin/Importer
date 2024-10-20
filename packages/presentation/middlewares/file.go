@@ -13,7 +13,6 @@ func VerifyXLSXMiddleware(c *gin.Context) {
 		c.Next()
 		return
 	}
-
 	file, header, err := c.Request.FormFile("file")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, domains.HttpResponse{
@@ -24,7 +23,6 @@ func VerifyXLSXMiddleware(c *gin.Context) {
 		return
 	}
 	defer file.Close()
-
 	filename := header.Filename
 	if !strings.HasSuffix(strings.ToLower(filename), ".xlsx") {
 		c.JSON(http.StatusBadRequest, domains.HttpResponse{
