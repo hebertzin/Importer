@@ -32,6 +32,5 @@ func VerifyXLSXMiddleware(c *gin.Context) {
 		c.Abort()
 		return
 	}
-
 	c.Next()
 }

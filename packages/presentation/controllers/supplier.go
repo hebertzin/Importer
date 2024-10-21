@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"enube-challenge/packages/domains"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type SupplierController struct {
@@ -45,7 +46,6 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 			log.Printf("Failed to close file: %v", err)
 		}
 	}(file)
-
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
 		c.JSON(http.StatusInternalServerError, domains.HttpResponse{

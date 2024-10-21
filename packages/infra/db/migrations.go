@@ -1,8 +1,7 @@
 package db
 
 import (
-	"enube-challenge/packages/models"
-
+	"enube-challenge/packages/infra/db/models"
 	"gorm.io/gorm"
 )
 
