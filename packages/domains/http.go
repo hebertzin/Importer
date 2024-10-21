@@ -1,4 +1,4 @@
-package domain
+package domains
 
 type HttpResponse struct {
 	Message string      `json:"message"`

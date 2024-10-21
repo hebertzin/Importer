@@ -2,10 +2,10 @@ package main
 
 import (
 	_ "enube-challenge/docs"
-	"enube-challenge/packages/config"
-	"enube-challenge/packages/database"
-	"enube-challenge/packages/logging"
-	"enube-challenge/packages/routes"
+	"enube-challenge/packages/infra/config"
+	database2 "enube-challenge/packages/infra/db"
+	"enube-challenge/packages/infra/logging"
+	appRoutes "enube-challenge/packages/presentation/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
@@ -25,20 +25,20 @@ func main() {
 	logging.InitLogger()
 	defer logging.Log.Sync()
 	dbConfig := config.LoadConfig()
-	db := database.ConnectDatabase(dbConfig)
+	db := database2.ConnectDatabase(dbConfig)
 
-	err := database.Migrate(db)
+	err := database2.Migrate(db)
 	if err != nil {
-		logging.Log.Fatal("Error migrating database", zap.Error(err))
+		logging.Log.Fatal("Error migrating db", zap.Error(err))
 	}
 
 	router := gin.Default()
 
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	routes.UserRouter(router, db)
-	routes.AuthRouter(router, db)
-	routes.Suppliers(router, db)
+	appRoutes.UserRouter(router, db)
+	appRoutes.AuthRouter(router, db)
+	appRoutes.Suppliers(router, db)
 
 	if err := router.Run(":8080"); err != nil {
 		logging.Log.Fatal("Failed to start server", zap.Error(err))

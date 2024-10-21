@@ -1,20 +1,19 @@
 package controllers
 
 import (
-	"enube-challenge/packages/domain"
-	"enube-challenge/packages/dto"
-	"enube-challenge/packages/services"
+	"enube-challenge/packages/domains"
+	"enube-challenge/packages/infra/dto"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
-	authService services.AuthService
+	authUseCase domains.AuthUseCase
 }
 
-func NewAuthController(authService services.AuthService) *AuthController {
-	return &AuthController{authService: authService}
+func NewAuthController(authUseCase domains.AuthUseCase) *AuthController {
+	return &AuthController{authUseCase: authUseCase}
 }
 
 // SignInHandler godoc
@@ -31,7 +30,7 @@ func NewAuthController(authService services.AuthService) *AuthController {
 func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 	var req dto.LoginRequestDTO
 	if err := c.ShouldBindJSON(&req); err != nil {
-		response := domain.HttpResponse{
+		response := domains.HttpResponse{
 			Message: "Invalid request body",
 			Code:    http.StatusBadRequest,
 		}
@@ -39,9 +38,9 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 		return
 	}
 
-	authResponse, err := ctrl.authService.Auth(c.Request.Context(), req.Email, req.Password)
+	authResponse, err := ctrl.authUseCase.Auth(c.Request.Context(), req.Email, req.Password)
 	if err != nil {
-		response := domain.HttpResponse{
+		response := domains.HttpResponse{
 			Message: authResponse.Message,
 			Code:    authResponse.Code,
 		}
@@ -49,7 +48,7 @@ func (ctrl *AuthController) SignInHandler(c *gin.Context) {
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Message: "User logged in successfully",
 		Code:    http.StatusOK,
 		Body:    authResponse.Body,

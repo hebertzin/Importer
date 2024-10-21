@@ -1,4 +1,4 @@
-package domain
+package domains
 
 type Token interface {
 	SignIn(email string) (string, error)

@@ -2,8 +2,7 @@ package controllers
 
 import (
 	"bytes"
-	"enube-challenge/packages/domain"
-	"enube-challenge/packages/services"
+	"enube-challenge/packages/domains"
 	"fmt"
 	"io"
 	"log"
@@ -15,11 +14,11 @@ import (
 )
 
 type SupplierController struct {
-	service services.SupplierService
+	supplierUseCase domains.SupplierUseCase
 }
 
-func NewSupplierController(service services.SupplierService) *SupplierController {
-	return &SupplierController{service}
+func NewSupplierController(supplierUseCase domains.SupplierUseCase) *SupplierController {
+	return &SupplierController{supplierUseCase}
 }
 
 // ImportSuppliersHandler godoc
@@ -29,14 +28,14 @@ func NewSupplierController(service services.SupplierService) *SupplierController
 // @Accept multipart/form-data
 // @Produce json
 // @Param file formData file true "Suppliers Excel file"
-// @Success 200 {object} domain.HttpResponse "Suppliers imported successfully"
-// @Failure 400 {object} domain.HttpResponse "Failed to read file"
-// @Failure 500 {object} domain.HttpResponse "Failed to import suppliers"
+// @Success 200 {object} domains.HttpResponse "Suppliers imported successfully"
+// @Failure 400 {object} domains.HttpResponse "Failed to read file"
+// @Failure 500 {object} domains.HttpResponse "Failed to import suppliers"
 // @Router /suppliers/import [post]
 func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	file, _, err := c.Request.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.HttpResponse{
+		c.JSON(http.StatusBadRequest, domains.HttpResponse{
 			Code:    http.StatusBadRequest,
 			Message: "Failed to retrieve file from request: " + err.Error(),
 		})
@@ -49,7 +48,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 	}(file)
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
-		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
+		c.JSON(http.StatusInternalServerError, domains.HttpResponse{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to read file content: " + err.Error(),
 		})
@@ -58,16 +57,16 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 
 	log.Printf("File read successfully, size: %d bytes", buf.Len())
 
-	if err := ctrl.service.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
+	if err := ctrl.supplierUseCase.ImportSuppliersFromFile(c.Request.Context(), buf.Bytes()); err != nil {
 		log.Printf("ImportSuppliersFromFile error: %v", err)
-		c.JSON(http.StatusInternalServerError, domain.HttpResponse{
+		c.JSON(http.StatusInternalServerError, domains.HttpResponse{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to import suppliers: " + err.Error(),
 		})
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Message: "Suppliers imported successfully",
 		Code:    http.StatusOK,
 	}
@@ -76,7 +75,7 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 
 // FindSuppliersHandler godoc
 // @Summary Retrieve a list of suppliers with pagination
-// @Description Get a paginated list of suppliers from the database
+// @Description Get a paginated list of suppliers from the db
 // @Tags suppliers
 // @Accept  json
 // @Produce  json
@@ -87,14 +86,12 @@ func (ctrl *SupplierController) ImportSuppliersHandler(c *gin.Context) {
 // @Failure 500 {string} Failed to retrieve suppliers
 // @Router /api/v1/suppliers/import [get]
 func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
-
 	pageStr := c.DefaultQuery("page", "1")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil || page < 1 {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid page number"})
 		return
 	}
-
 	pageSizeStr := c.DefaultQuery("pageSize", "10")
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil || pageSize < 1 {
@@ -102,7 +99,7 @@ func (ctrl *SupplierController) FindSuppliersHandler(c *gin.Context) {
 		return
 	}
 
-	suppliers, err := ctrl.service.GetSuppliers(c.Request.Context(), page, pageSize)
+	suppliers, err := ctrl.supplierUseCase.GetSuppliers(c.Request.Context(), page, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": fmt.Sprintf("Failed to retrieve suppliers: %v", err)})
 		return
@@ -136,13 +133,13 @@ func (ctrl *SupplierController) FindSupplierById(ctx *gin.Context) {
 		return
 	}
 
-	supplier, err := ctrl.service.FindSupplierById(ctx.Request.Context(), id)
+	supplier, err := ctrl.supplierUseCase.FindSupplierById(ctx.Request.Context(), id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Supplier not found"})
 		return
 	}
 
-	response := domain.HttpResponse{
+	response := domains.HttpResponse{
 		Code:    http.StatusOK,
 		Message: "Supplier successfully found",
 		Body:    supplier,

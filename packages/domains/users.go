@@ -1,4 +1,4 @@
-package domain
+package domains
 
 import (
 	"context"
@@ -14,7 +14,12 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-type IUserRepository interface {
+type UsersRepository interface {
 	CreateUser(ctx context.Context, user *User) error
+	FindByEmail(ctx context.Context, email string) (*User, error)
+}
+
+type UsersUseCase interface {
+	Create(ctx context.Context, user *User) (*User, error)
 	FindByEmail(ctx context.Context, email string) (*User, error)
 }
