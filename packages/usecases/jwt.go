@@ -4,10 +4,11 @@ import (
 	"enube-challenge/packages/domains"
 	"enube-challenge/packages/infra/logging"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
-	"go.uber.org/zap"
 	"os"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"go.uber.org/zap"
 )
 
 var (
@@ -41,7 +42,7 @@ func (s *JWTUseCase) Verify(tokenString string) (domains.Claims, error) {
 		return SecretKey, nil
 	})
 	if err != nil {
-		logging.Log.Error("Failed to parse token", zap.String("token", tokenString), zap.Error(err))
+		logging.Log.Error("Failed to parse user token", zap.String("token", tokenString), zap.Error(err))
 		return domains.Claims{}, err
 	}
 	if !token.Valid {
